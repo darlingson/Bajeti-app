@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,8 +33,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Darlingson")
-                    MainOptions()
+                    Column() {
+                        WelcomeCard()
+                        MainOptions()
+                    }
                 }
             }
         }
@@ -71,7 +74,22 @@ fun MainOptionsCard(text: String,
 }
 @Composable
 fun WelcomeCard(){
+    Card(
+        shape =MaterialTheme.shapes.large,
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 10.dp
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
 
+    ) {
+        Column() {
+            Greeting("Darlingson")
+            Text(text = "Welcome")
+
+        }
+    }
 }
 @Preview(showBackground = true)
 @Composable
