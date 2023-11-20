@@ -1,6 +1,8 @@
 package com.codeshinobi.bajeti
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.LinearLayout
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,18 +16,23 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
+import com.codeshinobi.bajeti.activities.MainOption
 import com.codeshinobi.bajeti.ui.theme.BajetiTheme
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -35,6 +42,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    val context = LocalContext.current
                     Column() {
                         WelcomeCard()
                         MainOptions()
@@ -60,17 +68,22 @@ fun MainOptions() {
         MainOptionsCard(text = "Utilities", modifier = Modifier.fillMaxWidth())
     }
 }
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainOptionsCard(text: String,
                     modifier: Modifier = Modifier.fillMaxWidth()
 )
 {
+    val context = LocalContext.current
     Card(
         shape =MaterialTheme.shapes.large,
         elevation = CardDefaults.cardElevation(
             defaultElevation = 10.dp
         ),
         modifier = modifier.padding(10.dp).height(80.dp),
+        onClick = { Log.d("Click", "CardExample: Card Click")
+            context.startActivity(Intent(context, MainOption::class.java))},
+        enabled = true
     ) {
         Text(text = text,
             modifier = Modifier
