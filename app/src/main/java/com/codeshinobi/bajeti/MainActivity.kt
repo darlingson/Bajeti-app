@@ -18,7 +18,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.codeshinobi.bajeti.ui.theme.BajetiTheme
@@ -54,22 +56,26 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 fun MainOptions() {
     Column {
         MainOptionsCard(text = "Food", modifier = Modifier.fillMaxWidth())
-        MainOptionsCard(text = "Transportation")
-        MainOptionsCard(text = "Utilities")
+        MainOptionsCard(text = "Transportation", modifier = Modifier.fillMaxWidth())
+        MainOptionsCard(text = "Utilities", modifier = Modifier.fillMaxWidth())
     }
 }
 @Composable
 fun MainOptionsCard(text: String,
-                    modifier: Modifier = Modifier.fillMaxWidth())
+                    modifier: Modifier = Modifier.fillMaxWidth()
+)
 {
     Card(
         shape =MaterialTheme.shapes.large,
         elevation = CardDefaults.cardElevation(
             defaultElevation = 10.dp
         ),
-        modifier = modifier.padding(10.dp),
+        modifier = modifier.padding(10.dp).height(80.dp),
     ) {
-        Text(text = text)
+        Text(text = text,
+            modifier = Modifier
+            .padding(16.dp),
+            textAlign = TextAlign.Center,)
     }
 }
 @Composable
