@@ -1,6 +1,7 @@
 package com.codeshinobi.bajeti.Models
 
 import android.content.Context
+import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Database
 import androidx.room.Entity
@@ -12,7 +13,9 @@ import com.codeshinobi.bajeti.DAOs.ExpenseDAO
 
 @Entity
 data class ExpenseEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    val id: Int = 0,
     @ColumnInfo(name = "name")val name: String?,
     @ColumnInfo(name = "type")val type: String?,
     @ColumnInfo(name = "category")val Category: String?,
