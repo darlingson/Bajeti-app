@@ -21,11 +21,11 @@ interface ExpenseDAO {
     fun insertAll(vararg expenses:  ExpenseEntity)
 
     @Query("SELECT * FROM ExpenseEntity WHERE name = :name")
-    fun findProduct(name: String): List<ExpenseEntity>
+    fun findExpense(name: String): List<ExpenseEntity>
 
     @Query("DELETE FROM ExpenseEntity WHERE name = :name")
-    fun deleteProduct(name: String)
+    fun deleteExpense(name: String)
 
     @Query("SELECT * FROM ExpenseEntity")
-    fun getAllProducts(): LiveData<List<ExpenseEntity>>
+    fun getAllExpensess(): LiveData<List<ExpenseEntity>>
 }

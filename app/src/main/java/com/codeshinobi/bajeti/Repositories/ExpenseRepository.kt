@@ -18,23 +18,23 @@ class ExpenseRepository(private val ExpenseDao: ExpenseDAO) {
         }
     }
 
-//    fun deleteExpense(name: String) {
-//        coroutineScope.launch(Dispatchers.IO) {
-//            ExpenseDao.(name)
-//        }
-//    }
+    fun deleteExpense(name: String) {
+        coroutineScope.launch(Dispatchers.IO) {
+            ExpenseDao.deleteExpense(name)
+        }
+    }
 
 
-//    fun findExpense(name: String) {
-//        coroutineScope.launch(Dispatchers.Main) {
-//            searchResults.value = asyncFind(name).await()
-//        }
-//    }
-//
-//    private fun asyncFind(name: String): Deferred<List<ExpenseEntity>?> =
-//        coroutineScope.async(Dispatchers.IO) {
-//            return@async ExpenseDao.findExpense(name)
-//        }
+    fun findExpense(name: String) {
+        coroutineScope.launch(Dispatchers.Main) {
+            searchResults.value = asyncFind(name).await()
+        }
+    }
+
+    private fun asyncFind(name: String): Deferred<List<ExpenseEntity>?> =
+        coroutineScope.async(Dispatchers.IO) {
+            return@async ExpenseDao.findExpense(name)
+        }
 
 
 }
