@@ -6,6 +6,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.codeshinobi.bajeti.DAOs.ExpenseDAO
+import com.codeshinobi.bajeti.DAOs.TransportExpenseDAO
 import com.codeshinobi.bajeti.Models.ExpenseEntity
 import com.codeshinobi.bajeti.Models.TransportExpensesEntity
 
@@ -13,6 +14,7 @@ import com.codeshinobi.bajeti.Models.TransportExpensesEntity
 abstract class ExpenseDatabase: RoomDatabase() {
 
     abstract fun productDao(): ExpenseDAO
+    abstract fun TransportDao(): TransportExpenseDAO
 
     companion object {
 

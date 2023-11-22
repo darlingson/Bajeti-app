@@ -9,6 +9,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Room.databaseBuilder
 import androidx.room.RoomDatabase
 import com.codeshinobi.bajeti.DAOs.ExpenseDAO
+import com.codeshinobi.bajeti.DAOs.TransportExpenseDAO
 
 
 @Entity
@@ -33,7 +34,7 @@ data class ExpenseEntity(
 @Database(entities = [ExpenseEntity::class], version = 1)
 abstract class ExpensesDatabase : RoomDatabase() {
     abstract val ExpenseDAO: ExpenseDAO?
-
+    abstract val TransportExpenseDAO: TransportExpenseDAO?
     companion object {
         const val DATABASE_NAME = "expenses_db"
         private var instance: ExpensesDatabase? = null
