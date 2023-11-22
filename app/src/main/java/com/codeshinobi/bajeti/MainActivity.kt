@@ -83,7 +83,9 @@ fun MainOptionsCard(text: String,
         ),
         modifier = modifier.padding(10.dp).height(80.dp),
         onClick = { Log.d("Click", "CardExample: Card Click")
-            context.startActivity(Intent(context, MainOption::class.java))},
+//            context.startActivity(Intent(context, MainOption::class.java))
+            context.startActivity(Intent(context, ExpensesActivity::class.java))
+            },
         enabled = true
     ) {
         Text(text = text,
