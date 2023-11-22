@@ -93,6 +93,8 @@ fun MainScreen(
     var ExpenseName by remember { mutableStateOf("") }
     var ExpenseTypeQuantity by remember { mutableStateOf("") }
     var ExpenseCategory by remember { mutableStateOf("") }
+    var searching by remember { mutableStateOf(false) }
+
     val onExpenseTextChange = { text : String ->
         ExpenseName = text
     }
@@ -161,7 +163,7 @@ fun MainScreen(
                 ExpenseName = ""
                 ExpenseCategory = ""
             }) {
-                Text("Clear") c
+                Text("Clear")
             }
         }
         LazyColumn(
@@ -175,12 +177,16 @@ fun MainScreen(
                 TitleRow(head1 = "ID", head2 = "Product", head3 = "Quantity")
             }
 
-            items(list) { product ->
-                ProductRow(id = product.id, name = product.productName,
-                    quantity = product.quantity)
+            items(allProducts.size) {product ->
+                allProducts[product].name?.let {
+                    allProducts[product].amount?.let { it1 ->
+                        ProductRow(id = allProducts[product].id, name = it,
+                            quantity = it1
+                        )
+                    }
+                }
             }
         }
-    }
     }
 }
 @Composable
