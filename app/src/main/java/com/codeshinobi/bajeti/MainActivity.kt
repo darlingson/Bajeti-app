@@ -3,6 +3,7 @@ package com.codeshinobi.bajeti
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View.OnClickListener
 import android.widget.LinearLayout
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.codeshinobi.bajeti.activities.ExpensesActivity
 import com.codeshinobi.bajeti.activities.MainOption
+import com.codeshinobi.bajeti.activities.TransportExpeneseActivity
 import com.codeshinobi.bajeti.ui.theme.BajetiTheme
 
 class MainActivity : ComponentActivity() {
@@ -64,15 +66,16 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun MainOptions() {
     Column {
-        MainOptionsCard(text = "Food", modifier = Modifier.fillMaxWidth())
-        MainOptionsCard(text = "Transportation", modifier = Modifier.fillMaxWidth())
-        MainOptionsCard(text = "Utilities", modifier = Modifier.fillMaxWidth())
+        MainOptionsCard(text = "Food", modifier = Modifier.fillMaxWidth(), ExpensesActivity::class.java)
+        MainOptionsCard(text = "Transportation", modifier = Modifier.fillMaxWidth(),TransportExpeneseActivity::class.java)
+        MainOptionsCard(text = "Utilities", modifier = Modifier.fillMaxWidth(),ExpensesActivity::class.java)
     }
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainOptionsCard(text: String,
-                    modifier: Modifier = Modifier.fillMaxWidth()
+                    modifier: Modifier = Modifier.fillMaxWidth(),
+                    activity: Class<*>
 )
 {
     val context = LocalContext.current
@@ -84,7 +87,7 @@ fun MainOptionsCard(text: String,
         modifier = modifier.padding(10.dp).height(80.dp),
         onClick = { Log.d("Click", "CardExample: Card Click")
 //            context.startActivity(Intent(context, MainOption::class.java))
-            context.startActivity(Intent(context, ExpensesActivity::class.java))
+            context.startActivity(Intent(context, activity))
             },
         enabled = true
     ) {

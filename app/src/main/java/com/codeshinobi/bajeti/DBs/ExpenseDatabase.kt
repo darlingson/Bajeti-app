@@ -14,7 +14,7 @@ import com.codeshinobi.bajeti.Models.TransportExpensesEntity
 abstract class ExpenseDatabase: RoomDatabase() {
 
     abstract fun productDao(): ExpenseDAO
-    abstract fun TransportDao(): TransportExpenseDAO
+    abstract val TransportExpenseDAO: TransportExpenseDAO?
 
     companion object {
 

@@ -13,6 +13,11 @@
         android:theme="@style/Theme.Bajeti"
         tools:targetApi="31">
         <activity
+            android:name=".activities.TransportExpeneseActivity"
+            android:exported="false"
+            android:label="@string/title_activity_transport_expenese"
+            android:theme="@style/Theme.Bajeti" />
+        <activity
             android:name=".activities.ExpensesActivity"
             android:exported="false"
             android:label="@string/title_activity_expenses"
