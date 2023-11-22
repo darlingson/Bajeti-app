@@ -38,13 +38,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.codeshinobi.bajeti.Models.ExpenseEntity
 import com.codeshinobi.bajeti.Models.TransportExpensesEntity
-import com.codeshinobi.bajeti.ViewModels.ExpensesViewModel
 import com.codeshinobi.bajeti.ViewModels.TransportExpensesViewModel
 import com.codeshinobi.bajeti.activities.ui.theme.BajetiTheme
 
-class TransportExpeneseActivity : ComponentActivity() {
+class TransportExpensesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
