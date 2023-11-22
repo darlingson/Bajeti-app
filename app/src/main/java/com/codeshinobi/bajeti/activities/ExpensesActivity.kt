@@ -74,11 +74,11 @@ class ExpensesActivity : ComponentActivity() {
 @Composable
 fun ScreenSetup(viewModel: ExpensesViewModel) {
 
-    val allProducts by viewModel.allExpenses.observeAsState(listOf())
+    val allExpenses by viewModel.allExpenses.observeAsState(listOf())
     val searchResults by viewModel.searchResults.observeAsState(listOf())
 
     MainScreen(
-        allProducts = allProducts,
+        allExpenses = allExpenses,
         searchResults = searchResults,
         viewModel = viewModel
     )
@@ -86,20 +86,20 @@ fun ScreenSetup(viewModel: ExpensesViewModel) {
 
 @Composable
 fun MainScreen(
-    allProducts: List<ExpenseEntity>,
+    allExpenses: List<ExpenseEntity>,
     searchResults: List<ExpenseEntity>,
     viewModel: ExpensesViewModel
 ) {
     var ExpenseName by remember { mutableStateOf("") }
     var ExpenseTypeQuantity by remember { mutableStateOf("") }
-    var ExpenseCategory by remember { mutableStateOf("") }
+    var ExpenseAmount by remember { mutableStateOf("") }
     var searching by remember { mutableStateOf(false) }
 
     val onExpenseTextChange = { text : String ->
         ExpenseName = text
     }
-    val onQuantityTextChange = { text : String ->
-        ExpenseCategory = text
+    val onAmountTextChange = { text : String ->
+        ExpenseAmount = text
     }
 
     Column(
@@ -115,9 +115,9 @@ fun MainScreen(
         )
 
         CustomTextField(
-            title = "Expense Category",
-            textState = ExpenseCategory,
-            onTextChange = onQuantityTextChange,
+            title = "Expense Amount",
+            textState = ExpenseAmount,
+            onTextChange = onAmountTextChange,
             keyboardType = KeyboardType.Number
         )
 
@@ -128,13 +128,13 @@ fun MainScreen(
                 .padding(10.dp)
         ) {
             Button(onClick = {
-                if (ExpenseCategory.isNotEmpty()) {
+                if (ExpenseAmount.isNotEmpty()) {
                     viewModel.insertProduct(
                         ExpenseEntity(
                             name = ExpenseName,
-                            Category = ExpenseCategory,
+                            Category = "Footd",
                             type = "Food",
-                            amount = "5000".toInt()
+                            amount = ExpenseAmount.toInt()
 
                         )
                     )
@@ -161,7 +161,7 @@ fun MainScreen(
             Button(onClick = {
                 searching = false
                 ExpenseName = ""
-                ExpenseCategory = ""
+                ExpenseAmount = ""
             }) {
                 Text("Clear")
             }
@@ -171,17 +171,17 @@ fun MainScreen(
                 .fillMaxWidth()
                 .padding(10.dp)
         ) {
-            val list = if (searching) searchResults else allProducts
+            val list = if (searching) searchResults else allExpenses
 
             item {
-                TitleRow(head1 = "ID", head2 = "Product", head3 = "Quantity")
+                TitleRow(head1 = "ID", head2 = "Expense", head3 = "Amount")
             }
 
-            items(allProducts.size) {product ->
-                allProducts[product].name?.let {
-                    allProducts[product].amount?.let { it1 ->
-                        ProductRow(id = allProducts[product].id, name = it,
-                            quantity = it1
+            items(allExpenses.size) { expense ->
+                allExpenses[expense].name?.let {
+                    allExpenses[expense].amount?.let { it1 ->
+                        ExpenseRow(id = allExpenses[expense].id, name = it,
+                            amount = it1
                         )
                     }
                 }
@@ -209,7 +209,7 @@ fun TitleRow(head1: String, head2: String, head3: String) {
 }
 
 @Composable
-fun ProductRow(id: Int, name: String, quantity: Int) {
+fun ExpenseRow(id: Int, name: String, amount: Int) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -218,7 +218,7 @@ fun ProductRow(id: Int, name: String, quantity: Int) {
         Text(id.toString(), modifier = Modifier
             .weight(0.1f))
         Text(name, modifier = Modifier.weight(0.2f))
-        Text(quantity.toString(), modifier = Modifier.weight(0.2f))
+        Text(amount.toString(), modifier = Modifier.weight(0.2f))
     }
 }
 
