@@ -21,11 +21,11 @@ interface TransportExpenseDAO {
     fun insertAll(vararg expenses:  TransportExpensesEntity)
 
     @Query("SELECT * FROM TransportExpensesEntity WHERE location = :location")
-    fun findExpense(location: String): List<TransportExpensesEntity>
+    fun findTransportExpense(location: String): List<TransportExpensesEntity>
 
     @Query("DELETE FROM TransportExpensesEntity WHERE location = :location")
-    fun deleteExpense(location: String)
+    fun deleteTransportExpense(location: String)
 
     @Query("SELECT * FROM TransportExpensesEntity")
-    fun getAllExpensess(): LiveData<List<TransportExpensesEntity>>
+    fun getAllTransportExpensess(): LiveData<List<TransportExpensesEntity>>
 }
