@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 data class TransportExpensesEntity(
     @PrimaryKey(autoGenerate = true)
     @NonNull
-    val id: Int,
+    val id: Int = 0,
     @ColumnInfo(name = "location")
     val location: String,
     @ColumnInfo(name = "amount")

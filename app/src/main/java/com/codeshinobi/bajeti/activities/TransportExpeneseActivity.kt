@@ -32,7 +32,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
@@ -40,7 +39,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codeshinobi.bajeti.Models.ExpenseEntity
+import com.codeshinobi.bajeti.Models.TransportExpensesEntity
 import com.codeshinobi.bajeti.ViewModels.ExpensesViewModel
+import com.codeshinobi.bajeti.ViewModels.TransportExpensesViewModel
 import com.codeshinobi.bajeti.activities.ui.theme.BajetiTheme
 
 class TransportExpeneseActivity : ComponentActivity() {
@@ -56,10 +57,10 @@ class TransportExpeneseActivity : ComponentActivity() {
                     val owner = LocalViewModelStoreOwner.current
 
                     owner?.let {
-                        val viewModel: ExpensesViewModel = viewModel(
+                        val viewModel: TransportExpensesViewModel = viewModel(
                             it,
                             "ExpensesViewModel",
-                            ExpensesViewModelFactory(
+                            TransportExpensesViewModelFactory(
                                 LocalContext.current.applicationContext
                                         as Application
                             )
@@ -82,7 +83,7 @@ class TransportExpeneseActivity : ComponentActivity() {
 //}
 
 @Composable
-fun TransportScreenSetup(viewModel: ExpensesViewModel) {
+fun TransportScreenSetup(viewModel: TransportExpensesViewModel) {
 
     val allExpenses by viewModel.allExpenses.observeAsState(listOf())
     val searchResults by viewModel.searchResults.observeAsState(listOf())
@@ -96,23 +97,23 @@ fun TransportScreenSetup(viewModel: ExpensesViewModel) {
 
 @Composable
 fun TransportMainScreen(
-    allExpenses: List<ExpenseEntity>,
-    searchResults: List<ExpenseEntity>,
-    viewModel: ExpensesViewModel
+    allExpenses: List<TransportExpensesEntity>,
+    searchResults: List<TransportExpensesEntity>,
+    viewModel: TransportExpensesViewModel
 ) {
-    var ExpenseName by remember { mutableStateOf("") }
-    var ExpenseCategory by remember { mutableStateOf("") }
-    var ExpenseAmount by remember { mutableStateOf("") }
+    var location by remember { mutableStateOf("") }
+    var date by remember { mutableStateOf("") }
+    var amount by remember { mutableStateOf("") }
     var searching by remember { mutableStateOf(false) }
 
-    val onExpenseTextChange = { text : String ->
-        ExpenseName = text
+    val onLocationTextChange = { text : String ->
+        location = text
     }
     val onAmountTextChange = { text : String ->
-        ExpenseAmount = text
+        amount = text
     }
-    val onCategoryTextChange = { text : String ->
-        ExpenseCategory = text
+    val onDateTextChange = { text : String ->
+        date = text
     }
 
     Column(
@@ -121,21 +122,21 @@ fun TransportMainScreen(
             .fillMaxWidth()
     ) {
         TransportCustomTextField(
-            title = "Expense Name",
-            textState = ExpenseName,
-            onTextChange = onExpenseTextChange,
+            title = "Location",
+            textState = location,
+            onTextChange = onLocationTextChange,
             keyboardType = KeyboardType.Text
         )
         TransportCustomTextField(
-            title = "Expense Category",
-            textState = ExpenseCategory,
-            onTextChange = onCategoryTextChange,
+            title = "Date",
+            textState = date,
+            onTextChange = onDateTextChange,
             keyboardType = KeyboardType.Text
         )
 
         TransportCustomTextField(
             title = "Expense Amount",
-            textState = ExpenseAmount,
+            textState = amount,
             onTextChange = onAmountTextChange,
             keyboardType = KeyboardType.Number
         )
@@ -147,40 +148,38 @@ fun TransportMainScreen(
                 .padding(10.dp)
         ) {
             Button(onClick = {
-                if (ExpenseAmount.isNotEmpty()) {
-                    viewModel.insertProduct(
-                        ExpenseEntity(
-                            name = ExpenseName,
-                            Category = ExpenseCategory,
-                            type = "Food",
-                            amount = ExpenseAmount.toInt()
-
+                if (amount.isNotEmpty()) {
+                    viewModel.insertTransportExpense(
+                        TransportExpensesEntity(
+                            location = location,
+                            date = date,
+                            amount = amount.toInt()
                         )
                     )
                     searching = false
                 }
             }) {
-                Text("Add Location")
+                Text("Add")
             }
 
             Button(onClick = {
                 searching = true
-                viewModel.findProduct(ExpenseName)
+                viewModel.findTransportExpense(location)
             }) {
                 Text("Search")
             }
 
             Button(onClick = {
                 searching = false
-                viewModel.deleteProduct(ExpenseName)
+                viewModel.deleteTransportExpense(location)
             }) {
                 Text("Delete")
             }
 
             Button(onClick = {
                 searching = false
-                ExpenseName = ""
-                ExpenseAmount = ""
+                location = ""
+                amount = ""
             }) {
                 Text("Clear")
             }
@@ -193,15 +192,15 @@ fun TransportMainScreen(
             val list = if (searching) searchResults else allExpenses
 
             item {
-                TransportTitleRow(head1 = "ID", head2 = "Expense", head3 = "Category",head4="Amount")
+                TransportTitleRow(head1 = "ID", head2 = "location", head3 = "Date",head4="Amount")
             }
 
             items(allExpenses.size) { expense ->
-                allExpenses[expense].name?.let {
+                allExpenses[expense].location?.let {
                     allExpenses[expense].amount?.let { it1 ->
-                        allExpenses[expense].Category?.let { it2 ->
-                            TransportExpenseRow(id = allExpenses[expense].id, name = it,
-                                category = it2, amount = it1
+                        allExpenses[expense].date?.let { it2 ->
+                            TransportExpenseRow(id = allExpenses[expense].id, location = it,
+                                date = it2, amount = it1
                             )
                         }
                     }
@@ -232,7 +231,7 @@ fun TransportTitleRow(head1: String, head2: String, head3: String,head4:String) 
 }
 
 @Composable
-fun TransportExpenseRow(id: Int, name: String, amount: Int,category: String) {
+fun TransportExpenseRow(id: Int, location: String, amount: Int,date: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -240,8 +239,8 @@ fun TransportExpenseRow(id: Int, name: String, amount: Int,category: String) {
     ) {
         Text(id.toString(), modifier = Modifier
             .weight(0.1f))
-        Text(name, modifier = Modifier.weight(0.2f))
-        Text(category, modifier = Modifier.weight(0.2f))
+        Text(location, modifier = Modifier.weight(0.2f))
+        Text(date, modifier = Modifier.weight(0.2f))
         Text(amount.toString(), modifier = Modifier.weight(0.2f))
     }
 }
@@ -278,6 +277,6 @@ fun TransportMainContent(name: String, modifier: Modifier = Modifier) {
 class TransportExpensesViewModelFactory(val application: Application) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return ExpensesViewModel(application) as T
+        return TransportExpensesViewModel(application) as T
     }
 }
