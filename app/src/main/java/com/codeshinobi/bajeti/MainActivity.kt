@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
+import com.codeshinobi.bajeti.activities.ExpensesActivity
 import com.codeshinobi.bajeti.activities.MainOption
 import com.codeshinobi.bajeti.ui.theme.BajetiTheme
 
@@ -91,8 +92,10 @@ fun MainOptionsCard(text: String,
             textAlign = TextAlign.Center,)
     }
 }
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WelcomeCard(){
+    val context = LocalContext.current
     Card(
         shape =MaterialTheme.shapes.large,
         elevation = CardDefaults.cardElevation(
@@ -100,8 +103,10 @@ fun WelcomeCard(){
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp)
-
+            .height(200.dp),
+        onClick = { Log.d("Click", "CardExample: Card Click")
+            context.startActivity(Intent(context, ExpensesActivity::class.java))},
+        enabled = true
     ) {
         Column() {
             Greeting("Darlingson")
