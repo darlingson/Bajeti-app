@@ -91,7 +91,7 @@ fun MainScreen(
     viewModel: ExpensesViewModel
 ) {
     var ExpenseName by remember { mutableStateOf("") }
-    var ExpenseTypeQuantity by remember { mutableStateOf("") }
+    var ExpenseCategory by remember { mutableStateOf("") }
     var ExpenseAmount by remember { mutableStateOf("") }
     var searching by remember { mutableStateOf(false) }
 
@@ -100,6 +100,9 @@ fun MainScreen(
     }
     val onAmountTextChange = { text : String ->
         ExpenseAmount = text
+    }
+    val onCategoryTextChange = { text : String ->
+        ExpenseCategory = text
     }
 
     Column(
@@ -111,6 +114,12 @@ fun MainScreen(
             title = "Expense Name",
             textState = ExpenseName,
             onTextChange = onExpenseTextChange,
+            keyboardType = KeyboardType.Text
+        )
+        CustomTextField(
+            title = "Expense Category",
+            textState = ExpenseCategory,
+            onTextChange = onCategoryTextChange,
             keyboardType = KeyboardType.Text
         )
 
@@ -132,7 +141,7 @@ fun MainScreen(
                     viewModel.insertProduct(
                         ExpenseEntity(
                             name = ExpenseName,
-                            Category = "Footd",
+                            Category = ExpenseCategory,
                             type = "Food",
                             amount = ExpenseAmount.toInt()
 
@@ -174,15 +183,17 @@ fun MainScreen(
             val list = if (searching) searchResults else allExpenses
 
             item {
-                TitleRow(head1 = "ID", head2 = "Expense", head3 = "Amount")
+                TitleRow(head1 = "ID", head2 = "Expense", head3 = "Category",head4="Amount")
             }
 
             items(allExpenses.size) { expense ->
                 allExpenses[expense].name?.let {
                     allExpenses[expense].amount?.let { it1 ->
-                        ExpenseRow(id = allExpenses[expense].id, name = it,
-                            amount = it1
-                        )
+                        allExpenses[expense].Category?.let { it2 ->
+                            ExpenseRow(id = allExpenses[expense].id, name = it,
+                                category = it2, amount = it1
+                            )
+                        }
                     }
                 }
             }
@@ -190,7 +201,7 @@ fun MainScreen(
     }
 }
 @Composable
-fun TitleRow(head1: String, head2: String, head3: String) {
+fun TitleRow(head1: String, head2: String, head3: String,head4:String) {
     Row(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.primary)
@@ -205,11 +216,13 @@ fun TitleRow(head1: String, head2: String, head3: String) {
                 .weight(0.2f))
         Text(head3, color = Color.White,
             modifier = Modifier.weight(0.2f))
+        Text(head4, color = Color.White,
+            modifier = Modifier.weight(0.2f))
     }
 }
 
 @Composable
-fun ExpenseRow(id: Int, name: String, amount: Int) {
+fun ExpenseRow(id: Int, name: String, amount: Int,category: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -218,6 +231,7 @@ fun ExpenseRow(id: Int, name: String, amount: Int) {
         Text(id.toString(), modifier = Modifier
             .weight(0.1f))
         Text(name, modifier = Modifier.weight(0.2f))
+        Text(category, modifier = Modifier.weight(0.2f))
         Text(amount.toString(), modifier = Modifier.weight(0.2f))
     }
 }
@@ -246,7 +260,7 @@ fun CustomTextField(
 @Composable
 fun MainContent(name: String, modifier: Modifier = Modifier) {
     Column() {
-        TitleRow(head1 = "ID", head2 = "Name", head3 = "Quantity")
+        TitleRow(head1 = "ID", head2 = "Name", head3 = "Category", head4 = "Amount")
         CustomTextField(title = "ID", textState = "1", onTextChange = {}, keyboardType = KeyboardType.Number)
     }
 }
