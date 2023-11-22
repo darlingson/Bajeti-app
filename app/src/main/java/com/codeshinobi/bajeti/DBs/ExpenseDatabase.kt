@@ -7,8 +7,9 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.codeshinobi.bajeti.DAOs.ExpenseDAO
 import com.codeshinobi.bajeti.Models.ExpenseEntity
+import com.codeshinobi.bajeti.Models.TransportExpensesEntity
 
-@Database(entities = [(ExpenseEntity::class)], version = 1)
+@Database(entities = [(ExpenseEntity::class),(TransportExpensesEntity::class)], version = 1)
 abstract class ExpenseDatabase: RoomDatabase() {
 
     abstract fun productDao(): ExpenseDAO
