@@ -28,4 +28,7 @@ interface TransportExpenseDAO {
 
     @Query("SELECT * FROM TransportExpensesEntity")
     fun getAllTransportExpensess(): LiveData<List<TransportExpensesEntity>>
+
+    @Query("SELECT SUM(amount) FROM TransportExpensesEntity")
+    fun getTotalAmount(): LiveData<Int>
 }

@@ -28,4 +28,7 @@ interface ExpenseDAO {
 
     @Query("SELECT * FROM ExpenseEntity")
     fun getAllExpensess(): LiveData<List<ExpenseEntity>>
+
+    @Query("SELECT SUM(amount) FROM ExpenseEntity")
+    fun getTotalAmount(): LiveData<Int>
 }
