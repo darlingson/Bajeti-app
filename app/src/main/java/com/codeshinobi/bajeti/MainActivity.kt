@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,20 +18,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
 import com.codeshinobi.bajeti.Models.ExpensesDatabase
 import com.codeshinobi.bajeti.Repositories.ExpenseRepository
+import com.codeshinobi.bajeti.Repositories.TransportExpensesRepository
 import com.codeshinobi.bajeti.activities.ExpensesActivity
 import com.codeshinobi.bajeti.activities.TransportExpensesActivity
 import com.codeshinobi.bajeti.ui.theme.BajetiTheme
@@ -83,18 +76,28 @@ fun MainOptionsCard(text: String,
 )
 {
 
-    val context = LocalContext.current
-    val repository: ExpenseRepository?
+    val context = LocalContext.current //getting the context
+
+    //getting the repository and DAO for the expenseEntity
+    val expenseRepository: ExpenseRepository?
     val expensesDatabase = ExpensesDatabase.getInstance(context)
     val expenseDAO = expensesDatabase?.ExpenseDAO
-    repository = expenseDAO?.let { ExpenseRepository(it) }
-    val sumOfFood: State<Int?>? = repository?.sumofExpenses?.observeAsState(initial = 0)
-    var clickCount = rememberSaveable { mutableStateOf(0) }
-    if (repository != null) {
-        repository.sumofExpenses?.value?.let {
-            clickCount.value = it
-        }
-    }
+    expenseRepository = expenseDAO?.let { ExpenseRepository(it) }
+
+    //getting the sum of expenses and setting it into a state
+    val sumOfFood: State<Int?>? = expenseRepository?.sumofExpenses?.observeAsState(initial = 0)
+
+
+
+    //getting the repository and DAO for the expenseEntity
+    val transportRepository: TransportExpensesRepository?
+//    val expensesDatabase = ExpensesDatabase.getInstance(context)
+    val transportexpenseDAO = expensesDatabase?.TransportExpenseDAO
+    transportRepository = transportexpenseDAO?.let { TransportExpensesRepository(it) }
+
+    //getting the sum of expenses and setting it into a state
+    val sumOfTransport: State<Int?>? = transportRepository?.sumofTransportExpenses?.observeAsState(initial = 0)
+
     Card(
         shape =MaterialTheme.shapes.large,
         elevation = CardDefaults.cardElevation(
@@ -114,8 +117,15 @@ fun MainOptionsCard(text: String,
             modifier = Modifier
             .padding(16.dp),
             textAlign = TextAlign.Center,)
-        sumOfFood?.value?.let {
-            Text(text = sumOfFood.value.toString())
+        if (activity == ExpensesActivity::class.java){
+            sumOfFood?.value?.let {
+                Text(text = sumOfFood.value.toString())
+            }
+        }else if (activity == TransportExpensesActivity::class.java){
+            sumOfTransport?.value?.let {
+                Text(text = sumOfTransport.value.toString())
+            }
+
         }
     }
 }

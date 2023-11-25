@@ -14,7 +14,7 @@ class TransportExpensesRepository(private val transportExpenseDAO: TransportExpe
 
     val allTransportExpenses: LiveData<List<TransportExpensesEntity>> = transportExpenseDAO.getAllExpenses()
     val searchResults = MutableLiveData<List<TransportExpensesEntity>>()
-    var sumofTransportExpenses:Int = 0
+    var sumofTransportExpenses:LiveData<Int> = transportExpenseDAO.getTotalAmount()
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     fun insertExpense(newExpense: TransportExpensesEntity) {
@@ -35,12 +35,12 @@ class TransportExpensesRepository(private val transportExpenseDAO: TransportExpe
         }
     }
 
-    fun getSumofExpenses():Int {
-        coroutineScope.launch {
-            sumofTransportExpenses = transportExpenseDAO.getTotalAmount().value!!
-        }
-        return sumofTransportExpenses
-    }
+//    fun getSumofExpenses():Int {
+//        coroutineScope.launch {
+//            sumofTransportExpenses = transportExpenseDAO.getTotalAmount().value!!
+//        }
+//        return sumofTransportExpenses
+//    }
 
     private fun asyncFind(name: String): Deferred<List<TransportExpensesEntity>?> =
         coroutineScope.async(Dispatchers.IO) {
