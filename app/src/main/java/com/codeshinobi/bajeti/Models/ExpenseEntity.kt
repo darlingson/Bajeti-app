@@ -31,7 +31,7 @@ data class ExpenseEntity(
 //    AppDatabase::class.java, "expense.db"
 //).build()
 
-@Database(entities = [ExpenseEntity::class,TransportExpensesEntity::class], version = 1)
+@Database(entities = [ExpenseEntity::class,TransportExpensesEntity::class,UtilitiesEntity::class], version = 1)
 abstract class ExpensesDatabase : RoomDatabase() {
     abstract val ExpenseDAO: ExpenseDAO?
     abstract val TransportExpenseDAO: TransportExpenseDAO?
