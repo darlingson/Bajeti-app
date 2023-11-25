@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -66,6 +67,7 @@ fun MainOptions() {
         MainOptionsCard(text = "Food", modifier = Modifier.fillMaxWidth(), ExpensesActivity::class.java)
         MainOptionsCard(text = "Transportation", modifier = Modifier.fillMaxWidth(),TransportExpensesActivity::class.java)
         MainOptionsCard(text = "Utilities", modifier = Modifier.fillMaxWidth(),ExpensesActivity::class.java)
+        MainOptionsCard(text = "Other Expenses", modifier = Modifier.fillMaxWidth(),ExpensesActivity::class.java)
     }
 }
 @OptIn(ExperimentalMaterial3Api::class)
@@ -119,11 +121,19 @@ fun MainOptionsCard(text: String,
             textAlign = TextAlign.Center,)
         if (activity == ExpensesActivity::class.java){
             sumOfFood?.value?.let {
-                Text(text = sumOfFood.value.toString())
+                Text(
+                    text = sumOfFood.value.toString(),
+                    modifier = Modifier.padding(start = 16.dp),
+                    textAlign = TextAlign.Center
+                )
             }
         }else if (activity == TransportExpensesActivity::class.java){
             sumOfTransport?.value?.let {
-                Text(text = sumOfTransport.value.toString())
+                Text(
+                    text = sumOfTransport.value.toString(),
+                    modifier = Modifier.padding(start = 16.dp),
+                    textAlign = TextAlign.Center
+                )
             }
 
         }

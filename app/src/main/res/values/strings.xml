@@ -3,4 +3,6 @@
     <string name="title_activity_main_option">MainOption</string>
     <string name="title_activity_expenses">ExpensesActivity</string>
     <string name="title_activity_transport_expenese">TransportExpeneseActivity</string>
+    <string name="title_activity_utilities">UtilitiesActivity</string>
+    <string name="title_activity_other_expenses">OtherExpensesActivity</string>
 </resources>
