@@ -1,33 +1,34 @@
 package com.codeshinobi.bajeti.DAOs
 
 import androidx.lifecycle.LiveData
+import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.codeshinobi.bajeti.Models.UtilitiesEntity
-
+@Dao
 interface UtilitiesDAO {
     @Query("SELECT * FROM UtilitiesEntity")
-    fun getAll(): LiveData<UtilitiesEntity>
+    fun getAllUtilities(): LiveData<UtilitiesEntity>
 
     @Query("SELECT * FROM UtilitiesEntity")
-    fun getAllExpenses(): LiveData<List<UtilitiesEntity>>
+    fun getAllUtilitiesExpenses(): LiveData<List<UtilitiesEntity>>
 
     @Query("SELECT * FROM UtilitiesEntity WHERE id = :id")
-    fun getById(id: Int): UtilitiesEntity
+    fun getUtilitiesById(id: Int): UtilitiesEntity
     @Insert
-    fun insert(expense: UtilitiesEntity)
+    fun insertUtilities(expense: UtilitiesEntity)
     @Insert
-    fun insertAll(vararg expenses: UtilitiesEntity)
+    fun insertAllUtilities(vararg expenses: UtilitiesEntity)
 
     @Query("SELECT * FROM UtilitiesEntity WHERE name = :name")
-    fun findTransportExpense(name: String): List<UtilitiesEntity>
+    fun findUtilitiesExpense(name: String): List<UtilitiesEntity>
 
     @Query("DELETE FROM UtilitiesEntity WHERE name = :name")
-    fun deleteTransportExpense(name: String)
+    fun deleteUtilitiesExpense(name: String)
 
     @Query("SELECT * FROM UtilitiesEntity")
-    fun getAllTransportExpensess(): LiveData<List<UtilitiesEntity>>
+    fun getAllUtilitiesExpensess(): LiveData<List<UtilitiesEntity>>
 
     @Query("SELECT SUM(amount) FROM UtilitiesEntity")
-    fun getTotalAmount(): LiveData<Int>
+    fun getTotalUtilitiesAmount(): LiveData<Int>
 }
