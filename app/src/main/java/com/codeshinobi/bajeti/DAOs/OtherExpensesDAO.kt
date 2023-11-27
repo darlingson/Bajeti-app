@@ -1,10 +1,11 @@
 package com.codeshinobi.bajeti.DAOs
 
 import androidx.lifecycle.LiveData
+import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.codeshinobi.bajeti.Models.OtherExpensesEntity
-
+@Dao
 interface OtherExpensesDAO {
     @Query("SELECT * FROM OtherExpensesEntity")
     fun getAll(): LiveData<OtherExpensesEntity>
@@ -20,13 +21,13 @@ interface OtherExpensesDAO {
     fun insertAll(vararg expenses:  OtherExpensesEntity)
 
     @Query("SELECT * FROM OtherExpensesEntity WHERE name = :name")
-    fun findTransportExpense(name: String): List<OtherExpensesEntity>
+    fun findOtherExpense(name: String): List<OtherExpensesEntity>
 
     @Query("DELETE FROM OtherExpensesEntity WHERE name = :name")
-    fun deleteTransportExpense(name: String)
+    fun deleteOtherExpense(name: String)
 
     @Query("SELECT * FROM OtherExpensesEntity")
-    fun getAllTransportExpensess(): LiveData<List<OtherExpensesEntity>>
+    fun getAllOtherExpensess(): LiveData<List<OtherExpensesEntity>>
 
     @Query("SELECT SUM(amount) FROM OtherExpensesEntity")
     fun getTotalAmount(): LiveData<Int>
