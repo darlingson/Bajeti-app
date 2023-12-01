@@ -3,11 +3,12 @@ package com.codeshinobi.bajeti.ViewModels
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.codeshinobi.bajeti.Models.ExpensesDatabase
 import com.codeshinobi.bajeti.Models.OtherExpensesEntity
 import com.codeshinobi.bajeti.Repositories.OtherExpensesRepository
 
-class OtherExpensesViewModel(application: Application) {
+class OtherExpensesViewModel(application: Application) : ViewModel() {
     val allExpenses: LiveData<List<OtherExpensesEntity>>
     private val repository: OtherExpensesRepository
     val searchResults: MutableLiveData<List<OtherExpensesEntity>>
