@@ -29,6 +29,7 @@ import com.codeshinobi.bajeti.Models.ExpensesDatabase
 import com.codeshinobi.bajeti.Repositories.ExpenseRepository
 import com.codeshinobi.bajeti.Repositories.TransportExpensesRepository
 import com.codeshinobi.bajeti.activities.ExpensesActivity
+import com.codeshinobi.bajeti.activities.OtherExpensesActivity
 import com.codeshinobi.bajeti.activities.TransportExpensesActivity
 import com.codeshinobi.bajeti.ui.theme.BajetiTheme
 
@@ -66,8 +67,8 @@ fun MainOptions() {
     Column {
         MainOptionsCard(text = "Food", modifier = Modifier.fillMaxWidth(), ExpensesActivity::class.java)
         MainOptionsCard(text = "Transportation", modifier = Modifier.fillMaxWidth(),TransportExpensesActivity::class.java)
+        MainOptionsCard(text = "Other Expenses", modifier = Modifier.fillMaxWidth(),OtherExpensesActivity::class.java)
         MainOptionsCard(text = "Utilities", modifier = Modifier.fillMaxWidth(),ExpensesActivity::class.java)
-        MainOptionsCard(text = "Other Expenses", modifier = Modifier.fillMaxWidth(),ExpensesActivity::class.java)
     }
 }
 @OptIn(ExperimentalMaterial3Api::class)

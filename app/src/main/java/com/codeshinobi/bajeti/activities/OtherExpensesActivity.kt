@@ -120,13 +120,6 @@ fun OtherUtilitiesMainScreen(
             keyboardType = KeyboardType.Text
         )
         OtherUtilitiesCustomTextField(
-            title = "Expense Category",
-            textState = ExpenseCategory,
-            onTextChange = onCategoryTextChange,
-            keyboardType = KeyboardType.Text
-        )
-
-        OtherUtilitiesCustomTextField(
             title = "Expense Amount",
             textState = ExpenseAmount,
             onTextChange = onAmountTextChange,
