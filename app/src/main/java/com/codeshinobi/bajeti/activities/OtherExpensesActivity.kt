@@ -39,9 +39,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.codeshinobi.bajeti.Models.ExpenseEntity
 import com.codeshinobi.bajeti.Models.OtherExpensesEntity
-import com.codeshinobi.bajeti.ViewModels.ExpensesViewModel
 import com.codeshinobi.bajeti.ViewModels.OtherExpensesViewModel
 import com.codeshinobi.bajeti.activities.ui.theme.BajetiTheme
 
@@ -67,7 +65,7 @@ class OtherExpensesActivity : ComponentActivity() {
                             )
                         )
 
-                        OtherUtilitiesScreenSetup(viewModel)
+                        OtherExpensesScreenSetup(viewModel)
                     }
                 }
             }
@@ -75,7 +73,7 @@ class OtherExpensesActivity : ComponentActivity() {
     }
 }
 @Composable
-fun OtherUtilitiesScreenSetup(viewModel: OtherExpensesViewModel) {
+fun OtherExpensesScreenSetup(viewModel: OtherExpensesViewModel) {
 
     val allExpenses by viewModel.allExpenses.observeAsState(listOf())
     val searchResults by viewModel.searchResults.observeAsState(listOf())
@@ -113,13 +111,13 @@ fun OtherUtilitiesMainScreen(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        OtherUtilitiesCustomTextField(
+        OtherExpensesCustomTextField(
             title = "Expense Name",
             textState = ExpenseName,
             onTextChange = onExpenseTextChange,
             keyboardType = KeyboardType.Text
         )
-        OtherUtilitiesCustomTextField(
+        OtherExpensesCustomTextField(
             title = "Expense Amount",
             textState = ExpenseAmount,
             onTextChange = onAmountTextChange,
@@ -177,13 +175,13 @@ fun OtherUtilitiesMainScreen(
             val list = if (searching) searchResults else allExpenses
 
             item {
-                OtherUtilitiesCustomTitleRow(head1 = "ID", head2 = "Expense",head3="Amount")
+                OtherExpensesCustomTitleRow(head1 = "ID", head2 = "Expense",head3="Amount")
             }
 
             items(allExpenses.size) { expense ->
                 allExpenses[expense].name?.let {name->
                     allExpenses[expense].amount?.let { amount ->
-                        OtherUtilitiesCustomExpenseRow(
+                        OtherExpensesCustomExpenseRow(
                             id = allExpenses[expense].id,
                             name = name,
                             amount = amount
@@ -195,7 +193,7 @@ fun OtherUtilitiesMainScreen(
     }
 }
 @Composable
-fun OtherUtilitiesCustomTitleRow(head1: String, head2: String, head3: String) {
+fun OtherExpensesCustomTitleRow(head1: String, head2: String, head3: String) {
     Row(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.primary)
@@ -214,7 +212,7 @@ fun OtherUtilitiesCustomTitleRow(head1: String, head2: String, head3: String) {
 }
 
 @Composable
-fun OtherUtilitiesCustomExpenseRow(id: Int, name: String, amount: Int) {
+fun OtherExpensesCustomExpenseRow(id: Int, name: String, amount: Int) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -229,7 +227,7 @@ fun OtherUtilitiesCustomExpenseRow(id: Int, name: String, amount: Int) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OtherUtilitiesCustomTextField(
+fun OtherExpensesCustomTextField(
     title: String,
     textState: String,
     onTextChange: (String) -> Unit,
@@ -249,17 +247,17 @@ fun OtherUtilitiesCustomTextField(
     )
 }
 @Composable
-fun OtherUtilitiesCustomMainContent(name: String, modifier: Modifier = Modifier) {
+fun OtherExpensesCustomMainContent(name: String, modifier: Modifier = Modifier) {
     Column() {
-        OtherUtilitiesCustomTitleRow(head1 = "ID", head2 = "Name",  head3 = "Amount")
-        OtherUtilitiesCustomTextField(title = "ID", textState = "1", onTextChange = {}, keyboardType = KeyboardType.Number)
+        OtherExpensesCustomTitleRow(head1 = "ID", head2 = "Name",  head3 = "Amount")
+        OtherExpensesCustomTextField(title = "ID", textState = "1", onTextChange = {}, keyboardType = KeyboardType.Number)
     }
 }
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview5() {
     BajetiTheme {
-        OtherUtilitiesCustomMainContent("Bajeti")
+        OtherExpensesCustomMainContent("Bajeti")
     }
 }
 
