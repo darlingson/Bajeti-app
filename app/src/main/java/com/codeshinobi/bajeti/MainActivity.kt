@@ -30,6 +30,7 @@ import com.codeshinobi.bajeti.Models.ExpensesDatabase
 import com.codeshinobi.bajeti.Repositories.ExpenseRepository
 import com.codeshinobi.bajeti.Repositories.OtherExpensesRepository
 import com.codeshinobi.bajeti.Repositories.TransportExpensesRepository
+import com.codeshinobi.bajeti.Repositories.UtilityExpensesRepository
 import com.codeshinobi.bajeti.activities.ExpensesActivity
 import com.codeshinobi.bajeti.activities.OtherExpensesActivity
 import com.codeshinobi.bajeti.activities.TransportExpensesActivity
@@ -109,6 +110,11 @@ fun MainOptionsCard(text: String,
     otherExpensesRepository = otherExpensesDAO?.let { OtherExpensesRepository(it) }
     val sumOfOtherExpenses: State<Int?>? = otherExpensesRepository?.sumofOtherExpenses?.observeAsState(initial = 0)
 
+    val utilityExpensesRepository: UtilityExpensesRepository?
+    val utilityExpensesDAO = expensesDatabase?.UtilitiesDAO
+    utilityExpensesRepository = utilityExpensesDAO?.let { UtilityExpensesRepository(it) }
+    val sumOfUtilityExpenses:State<Int?>? = utilityExpensesRepository?.sumofUtilityExpenses?.observeAsState(initial = 0)
+
     Card(
         shape =MaterialTheme.shapes.large,
         elevation = CardDefaults.cardElevation(
@@ -155,9 +161,9 @@ fun MainOptionsCard(text: String,
                 }
             }
             else if (activity == UtilitiesActivity::class.java){
-                sumOfTransport?.value?.let {
+                sumOfUtilityExpenses?.value?.let {
                     Text(
-                        text = sumOfTransport.value.toString(),
+                        text = sumOfUtilityExpenses.value.toString(),
                         modifier = Modifier.padding(start = 16.dp),
                         textAlign = TextAlign.Center
                     )
