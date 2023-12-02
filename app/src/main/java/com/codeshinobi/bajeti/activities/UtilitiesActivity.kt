@@ -94,8 +94,11 @@ fun UtilitiesMainScreen(
     viewModel: UtilitiesViewModel
 ) {
     var ExpenseName by remember { mutableStateOf("") }
-    var ExpenseCategory by remember { mutableStateOf("") }
+    var ExpenseType by remember { mutableStateOf("") }
     var ExpenseAmount by remember { mutableStateOf("") }
+    var ExpenseDate by remember {
+        mutableStateOf("")
+    }
     var searching by remember { mutableStateOf(false) }
 
     val onExpenseTextChange = { text : String ->
@@ -104,8 +107,11 @@ fun UtilitiesMainScreen(
     val onAmountTextChange = { text : String ->
         ExpenseAmount = text
     }
-    val onCategoryTextChange = { text : String ->
-        ExpenseCategory = text
+    val onTypeTextChange = { text : String ->
+        ExpenseType = text
+    }
+    val onDateTextChange = { text : String ->
+        ExpenseDate = text
     }
 
     Column(
@@ -125,6 +131,18 @@ fun UtilitiesMainScreen(
             onTextChange = onAmountTextChange,
             keyboardType = KeyboardType.Number
         )
+        UtilitiesCustomTextField(
+            title = "Expense Date",
+            textState = ExpenseDate,
+            onTextChange = onDateTextChange,
+            keyboardType = KeyboardType.Text
+        )
+        UtilitiesCustomTextField(
+            title = "Utility Type",
+            textState = ExpenseType,
+            onTextChange = onTypeTextChange,
+            keyboardType = KeyboardType.Text
+        )
 
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
@@ -138,10 +156,14 @@ fun UtilitiesMainScreen(
                         UtilitiesEntity (
                             name = ExpenseName,
                             amount = ExpenseAmount.toInt(),
-                            date = "today",
-                            type = "Utilities"
+                            date = ExpenseDate,
+                            type = ExpenseType
                         )
                     )
+                    ExpenseName = ""
+                    ExpenseAmount = ""
+                    ExpenseDate = ""
+                    ExpenseType = ""
                     searching = false
                 }
             }) {
@@ -178,7 +200,7 @@ fun UtilitiesMainScreen(
             val list = if (searching) searchResults else allExpenses
 
             item {
-                UtilitiesCustomTitleRow(head1 = "ID", head2 = "Expense",head3="Amount")
+                UtilitiesCustomTitleRow(head1 = "ID", head2 = "Expense", head3 = "date",head4="type", head5="Amount")
             }
 
             items(allExpenses.size) { expense ->
@@ -187,7 +209,9 @@ fun UtilitiesMainScreen(
                         UtilitiesCustomExpenseRow(
                             id = allExpenses[expense].id,
                             name = name,
-                            amount = amount
+                            amount = amount,
+                            date = allExpenses[expense].date,
+                            type = allExpenses[expense].type
                         )
                     }
                 }
@@ -197,7 +221,7 @@ fun UtilitiesMainScreen(
 }
 
 @Composable
-fun UtilitiesCustomTitleRow(head1: String, head2: String, head3: String) {
+fun UtilitiesCustomTitleRow(head1: String, head2: String, head3: String,head4:String,head5:String) {
     Row(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.primary)
@@ -212,11 +236,15 @@ fun UtilitiesCustomTitleRow(head1: String, head2: String, head3: String) {
                 .weight(0.2f))
         Text(head3, color = Color.White,
             modifier = Modifier.weight(0.2f))
+        Text(head4, color = Color.White,
+            modifier = Modifier.weight(0.2f))
+        Text(head5, color = Color.White,
+            modifier = Modifier.weight(0.2f))
     }
 }
 
 @Composable
-fun UtilitiesCustomExpenseRow(id: Int, name: String, amount: Int) {
+fun UtilitiesCustomExpenseRow(id: Int, name: String,date:String,type:String, amount: Int) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -225,6 +253,8 @@ fun UtilitiesCustomExpenseRow(id: Int, name: String, amount: Int) {
         Text(id.toString(), modifier = Modifier
             .weight(0.1f))
         Text(name, modifier = Modifier.weight(0.2f))
+        Text(date, modifier = Modifier.weight(0.2f))
+        Text(type, modifier = Modifier.weight(0.2f))
         Text(amount.toString(), modifier = Modifier.weight(0.2f))
     }
 }
@@ -253,7 +283,7 @@ fun UtilitiesCustomTextField(
 @Composable
 fun UtilitiesCustomMainContent(name: String, modifier: Modifier = Modifier) {
     Column() {
-        UtilitiesCustomTitleRow(head1 = "ID", head2 = "Name",  head3 = "Amount")
+        UtilitiesCustomTitleRow(head1 = "ID", head2 = "Name",  head3 = "Date",head4="Type", head5="Amount")
         UtilitiesCustomTextField(title = "ID", textState = "1", onTextChange = {}, keyboardType = KeyboardType.Number)
     }
 }

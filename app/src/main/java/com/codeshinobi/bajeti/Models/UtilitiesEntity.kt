@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class UtilitiesEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
     val id: Int = 0,
     @ColumnInfo(name = "name") val name: String?,
