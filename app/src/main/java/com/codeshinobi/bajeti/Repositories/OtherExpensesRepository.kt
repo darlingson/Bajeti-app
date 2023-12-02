@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 class OtherExpensesRepository(private val OtherExpensesDAO: OtherExpensesDAO) {
     val allOtherExpenses: LiveData<List<OtherExpensesEntity>> = OtherExpensesDAO.getAllExpenses()
     val searchResults = MutableLiveData<List<OtherExpensesEntity>>()
-    var sumofOtherExpenses: LiveData<Int> = OtherExpensesDAO.getTotalAmount()
+    var sumofOtherExpenses: LiveData<Int>? = OtherExpensesDAO.getTotalAmount()
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     fun insertExpense(newExpense: OtherExpensesEntity) {

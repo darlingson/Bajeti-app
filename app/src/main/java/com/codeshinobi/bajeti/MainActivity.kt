@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.codeshinobi.bajeti.Models.ExpensesDatabase
 import com.codeshinobi.bajeti.Repositories.ExpenseRepository
+import com.codeshinobi.bajeti.Repositories.OtherExpensesRepository
 import com.codeshinobi.bajeti.Repositories.TransportExpensesRepository
 import com.codeshinobi.bajeti.activities.ExpensesActivity
 import com.codeshinobi.bajeti.activities.OtherExpensesActivity
@@ -102,6 +104,11 @@ fun MainOptionsCard(text: String,
     //getting the sum of expenses and setting it into a state
     val sumOfTransport: State<Int?>? = transportRepository?.sumofTransportExpenses?.observeAsState(initial = 0)
 
+    val otherExpensesRepository :OtherExpensesRepository?
+    val otherExpensesDAO = expensesDatabase?.OtherExpensesDAO
+    otherExpensesRepository = otherExpensesDAO?.let { OtherExpensesRepository(it) }
+    val sumOfOtherExpenses: State<Int?>? = otherExpensesRepository?.sumofOtherExpenses?.observeAsState(initial = 0)
+
     Card(
         shape =MaterialTheme.shapes.large,
         elevation = CardDefaults.cardElevation(
@@ -116,26 +123,45 @@ fun MainOptionsCard(text: String,
             },
         enabled = true
     ) {
-
-        Text(text = text,
-            modifier = Modifier
-            .padding(16.dp),
-            textAlign = TextAlign.Center,)
-        if (activity == ExpensesActivity::class.java){
-            sumOfFood?.value?.let {
-                Text(
-                    text = sumOfFood.value.toString(),
-                    modifier = Modifier.padding(start = 16.dp),
-                    textAlign = TextAlign.Center
-                )
+        Row {
+            Text(text = text,
+                modifier = Modifier
+                    .padding(16.dp),
+                textAlign = TextAlign.Center,)
+            if (activity == ExpensesActivity::class.java){
+                sumOfFood?.value?.let {
+                    Text(
+                        text = sumOfFood.value.toString(),
+                        modifier = Modifier.padding(16.dp),
+                        textAlign = TextAlign.End
+                    )
+                }
+            }else if (activity == TransportExpensesActivity::class.java){
+                sumOfTransport?.value?.let {
+                    Text(
+                        text = sumOfTransport.value.toString(),
+                        modifier = Modifier.padding(start = 16.dp),
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
-        }else if (activity == TransportExpensesActivity::class.java){
-            sumOfTransport?.value?.let {
-                Text(
-                    text = sumOfTransport.value.toString(),
-                    modifier = Modifier.padding(start = 16.dp),
-                    textAlign = TextAlign.Center
-                )
+            else if (activity == OtherExpensesActivity::class.java){
+                sumOfOtherExpenses?.value?.let {
+                    Text(
+                        text = sumOfOtherExpenses.value.toString(),
+                        modifier = Modifier.padding(start = 16.dp),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+            else if (activity == UtilitiesActivity::class.java){
+                sumOfTransport?.value?.let {
+                    Text(
+                        text = sumOfTransport.value.toString(),
+                        modifier = Modifier.padding(start = 16.dp),
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
 
         }
