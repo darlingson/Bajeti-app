@@ -5,12 +5,16 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -129,44 +134,56 @@ fun MainOptionsCard(text: String,
             },
         enabled = true
     ) {
-        Row {
-            Text(text = text,
+        Row(horizontalArrangement = Arrangement.Absolute.SpaceBetween) {
+            Column(
+                horizontalAlignment = Alignment.Start,
+                modifier = Modifier.weight(0.49f)
+            ) {
+                Text(text = text,
+                    modifier = Modifier
+                        .padding(16.dp),
+                    textAlign = TextAlign.Center,)
+            }
+            Column(
+                horizontalAlignment = Alignment.End,
                 modifier = Modifier
-                    .padding(16.dp),
-                textAlign = TextAlign.Center,)
-            if (activity == ExpensesActivity::class.java){
-                sumOfFood?.value?.let {
-                    Text(
-                        text = sumOfFood.value.toString(),
-                        modifier = Modifier.padding(16.dp),
-                        textAlign = TextAlign.End
-                    )
+                    .fillMaxHeight()
+                    .weight(0.49f)
+            ) {
+                if (activity == ExpensesActivity::class.java){
+                    sumOfFood?.value?.let {
+                        Text(
+                            text = sumOfFood.value.toString(),
+                            modifier = Modifier.padding(16.dp),
+                            textAlign = TextAlign.End
+                        )
+                    }
+                }else if (activity == TransportExpensesActivity::class.java){
+                    sumOfTransport?.value?.let {
+                        Text(
+                            text = sumOfTransport.value.toString(),
+                            modifier = Modifier.padding(16.dp),
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
-            }else if (activity == TransportExpensesActivity::class.java){
-                sumOfTransport?.value?.let {
-                    Text(
-                        text = sumOfTransport.value.toString(),
-                        modifier = Modifier.padding(start = 16.dp),
-                        textAlign = TextAlign.Center
-                    )
+                else if (activity == OtherExpensesActivity::class.java){
+                    sumOfOtherExpenses?.value?.let {
+                        Text(
+                            text = sumOfOtherExpenses.value.toString(),
+                            modifier = Modifier.padding(16.dp),
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
-            }
-            else if (activity == OtherExpensesActivity::class.java){
-                sumOfOtherExpenses?.value?.let {
-                    Text(
-                        text = sumOfOtherExpenses.value.toString(),
-                        modifier = Modifier.padding(start = 16.dp),
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
-            else if (activity == UtilitiesActivity::class.java){
-                sumOfUtilityExpenses?.value?.let {
-                    Text(
-                        text = sumOfUtilityExpenses.value.toString(),
-                        modifier = Modifier.padding(start = 16.dp),
-                        textAlign = TextAlign.Center
-                    )
+                else if (activity == UtilitiesActivity::class.java){
+                    sumOfUtilityExpenses?.value?.let {
+                        Text(
+                            text = sumOfUtilityExpenses.value.toString(),
+                            modifier = Modifier.padding(16.dp),
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
             }
 
