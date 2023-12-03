@@ -13,6 +13,11 @@
         android:theme="@style/Theme.Bajeti"
         tools:targetApi="31">
         <activity
+            android:name=".activities.MonthBudgetActivity"
+            android:exported="false"
+            android:label="@string/title_activity_month_budget"
+            android:theme="@style/Theme.Bajeti" />
+        <activity
             android:name=".activities.OtherExpensesActivity"
             android:exported="false"
             android:label="@string/title_activity_other_expenses"

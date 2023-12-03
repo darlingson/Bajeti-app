@@ -5,4 +5,5 @@
     <string name="title_activity_transport_expenese">TransportExpeneseActivity</string>
     <string name="title_activity_utilities">UtilitiesActivity</string>
     <string name="title_activity_other_expenses">OtherExpensesActivity</string>
+    <string name="title_activity_month_budget">MonthBudgetActivity</string>
 </resources>
