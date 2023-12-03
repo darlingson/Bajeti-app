@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,14 +23,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
 import com.codeshinobi.bajeti.Models.ExpensesDatabase
 import com.codeshinobi.bajeti.Repositories.ExpenseRepository
+import com.codeshinobi.bajeti.Repositories.MonthTotalRepository
 import com.codeshinobi.bajeti.Repositories.OtherExpensesRepository
 import com.codeshinobi.bajeti.Repositories.TransportExpensesRepository
 import com.codeshinobi.bajeti.Repositories.UtilityExpensesRepository
@@ -41,6 +40,10 @@ import com.codeshinobi.bajeti.activities.OtherExpensesActivity
 import com.codeshinobi.bajeti.activities.TransportExpensesActivity
 import com.codeshinobi.bajeti.activities.UtilitiesActivity
 import com.codeshinobi.bajeti.ui.theme.BajetiTheme
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
 
 class MainActivity : ComponentActivity() {
 
@@ -139,10 +142,12 @@ fun MainOptionsCard(text: String,
                 horizontalAlignment = Alignment.Start,
                 modifier = Modifier.weight(0.49f)
             ) {
-                Text(text = text,
+                Text(
+                    text = text,
                     modifier = Modifier
                         .padding(16.dp),
-                    textAlign = TextAlign.Center,)
+                    textAlign = TextAlign.Center,
+                )
             }
             Column(
                 horizontalAlignment = Alignment.End,
@@ -193,7 +198,25 @@ fun MainOptionsCard(text: String,
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WelcomeCard(){
+    val dateFormat: DateFormat = SimpleDateFormat("MM")
+    val date = Date()
+    var currentMonth = dateFormat.format(date)
+
+    val cal: Calendar = Calendar.getInstance()
+    val year: Int = cal.get(Calendar.YEAR)
+    val mouth: Int = cal.get(Calendar.MONTH)
+    val day: Int = cal.get(Calendar.DATE)
+    val currentIndex = (year - 1970) * 12 + mouth
+
+    //retrieving the current month budget
     val context = LocalContext.current
+    val monthTotalRepository: MonthTotalRepository?
+    val expensesDatabase = ExpensesDatabase.getInstance(context)
+    val monthTotalDAO = expensesDatabase?.MonthlyTotalDAO
+    monthTotalRepository = monthTotalDAO?.let { MonthTotalRepository(it) }
+
+    val sumOfBudget: State<Int>? = monthTotalRepository?.gettotalBudget(currentIndex)?.observeAsState(initial = 0)
+
     Card(
         shape =MaterialTheme.shapes.large,
         elevation = CardDefaults.cardElevation(
@@ -209,6 +232,13 @@ fun WelcomeCard(){
         Column() {
             Greeting("Darlingson")
             Text(text = "Welcome")
+            sumOfBudget?.value?.let {
+                Text(
+                    text = sumOfBudget.value.toString(),
+                    modifier = Modifier.padding(16.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
 
         }
     }

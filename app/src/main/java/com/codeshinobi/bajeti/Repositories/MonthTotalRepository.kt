@@ -16,10 +16,11 @@ class MonthTotalRepository(private val totalDAO : MonthlyTotalDAO) {
     val monthTotalBudget = MutableLiveData<LiveData<Int>>()
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
-    fun gettotalBudget(month:Int) {
+    fun gettotalBudget(month:Int):LiveData<Int>? {
         coroutineScope.launch(Dispatchers.Main) {
             monthTotalBudget.value = asyncFindTotalBudget(month).await()
         }
+        return monthTotalBudget.value
     }
     private fun asyncFindTotalBudget(month: Int): Deferred<LiveData<Int>> =
         coroutineScope.async(Dispatchers.IO) {
