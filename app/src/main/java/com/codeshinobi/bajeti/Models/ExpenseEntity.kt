@@ -9,6 +9,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Room.databaseBuilder
 import androidx.room.RoomDatabase
 import com.codeshinobi.bajeti.DAOs.ExpenseDAO
+import com.codeshinobi.bajeti.DAOs.MonthBudgetDAO
 import com.codeshinobi.bajeti.DAOs.MonthlyTotalDAO
 import com.codeshinobi.bajeti.DAOs.OtherExpensesDAO
 import com.codeshinobi.bajeti.DAOs.TransportExpenseDAO
@@ -34,13 +35,14 @@ data class ExpenseEntity(
 //    AppDatabase::class.java, "expense.db"
 //).build()
 
-@Database(entities = [ExpenseEntity::class,TransportExpensesEntity::class,UtilitiesEntity::class,OtherExpensesEntity::class,MonthlyTotalBudget::class], version = 1)
+@Database(entities = [ExpenseEntity::class,TransportExpensesEntity::class,UtilitiesEntity::class,OtherExpensesEntity::class,MonthlyTotalBudget::class,MonthBudget::class], version = 1)
 abstract class ExpensesDatabase : RoomDatabase() {
     abstract val ExpenseDAO: ExpenseDAO?
     abstract val TransportExpenseDAO: TransportExpenseDAO?
     abstract val UtilitiesDAO: UtilitiesDAO?
     abstract val OtherExpensesDAO: OtherExpensesDAO?
     abstract val MonthlyTotalDAO:MonthlyTotalDAO
+    abstract val MonthBudgetDAO: MonthBudgetDAO
     companion object {
         const val DATABASE_NAME = "expenses_db"
         private var instance: ExpensesDatabase? = null
