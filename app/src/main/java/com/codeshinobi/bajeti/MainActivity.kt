@@ -36,6 +36,7 @@ import com.codeshinobi.bajeti.Repositories.OtherExpensesRepository
 import com.codeshinobi.bajeti.Repositories.TransportExpensesRepository
 import com.codeshinobi.bajeti.Repositories.UtilityExpensesRepository
 import com.codeshinobi.bajeti.activities.ExpensesActivity
+import com.codeshinobi.bajeti.activities.MonthBudgetActivity
 import com.codeshinobi.bajeti.activities.OtherExpensesActivity
 import com.codeshinobi.bajeti.activities.TransportExpensesActivity
 import com.codeshinobi.bajeti.activities.UtilitiesActivity
@@ -225,8 +226,11 @@ fun WelcomeCard(){
         modifier = Modifier
             .fillMaxWidth()
             .height(200.dp),
-        onClick = { Log.d("Click", "CardExample: Card Click")
-            context.startActivity(Intent(context, ExpensesActivity::class.java))},
+        onClick = {
+            Log.d("Click", "CardExample: Card Click")
+            context.startActivity(Intent(context,MonthBudgetActivity::class.java))
+//            context.startActivity(Intent(context, ExpensesActivity::class.java))
+                  },
         enabled = true
     ) {
         Column() {
