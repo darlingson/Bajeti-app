@@ -37,8 +37,18 @@ import com.codeshinobi.bajeti.Models.ExpenseEntity
 import com.codeshinobi.bajeti.Models.MonthBudget
 import com.codeshinobi.bajeti.ViewModels.MonthBudgetViewModel
 import com.codeshinobi.bajeti.activities.ui.theme.BajetiTheme
+import java.util.Calendar
 
 class MonthBudgetActivity : ComponentActivity() {
+    private var currentMonth : Int
+    init {
+        val cal: Calendar = Calendar.getInstance()
+        val year: Int = cal.get(Calendar.YEAR)
+        val mouth: Int = cal.get(Calendar.MONTH)
+        val day: Int = cal.get(Calendar.DATE)
+        val currentIndex = (year - 1970) * 12 + mouth
+        currentMonth = currentIndex
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -48,7 +58,7 @@ class MonthBudgetActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting4("Android")
+//                    Greeting4("Android")
                     val owner = LocalViewModelStoreOwner.current
                     owner?.let {
                         val viewModel: MonthBudgetViewModel = viewModel(
@@ -123,11 +133,16 @@ fun MonthBudgetMainScreen(allBudgets:List<MonthBudget>, viewModel: MonthBudgetVi
         ){
             Button(onClick = {
                 if (amount.isNotEmpty()) {
+                    val cal: Calendar = Calendar.getInstance()
+                    val year: Int = cal.get(Calendar.YEAR)
+                    val mouth: Int = cal.get(Calendar.MONTH)
+                    val day: Int = cal.get(Calendar.DATE)
+                    val currentIndex = (year - 1970) * 12 + mouth
                     viewModel.insertMonthBudget(
                         MonthBudget(
                             expenseName = expenseName,
                             expenseType = expenseType,
-                            monthNumber = monthNumber.toInt(),
+                            monthNumber =  currentIndex,//monthNumber.toInt(),
                             budgetAmount = amount.toInt()
                         )
                     )
