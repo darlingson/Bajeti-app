@@ -13,13 +13,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -70,28 +78,61 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    val drawerState = rememberDrawerState(DrawerValue.Closed)
-                    val scope = rememberCoroutineScope()
-                    val openDrawer = {
-                        scope.launch {
-                            drawerState.open()
-                        }
-                    }
                     val context = LocalContext.current
-//                    val scaffoldState = rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
                     var scaffoldState by remember { mutableStateOf(DrawerValue.Closed) }
-                    Scaffold(
-//                        scaffoldState = scaffoldState,
-                        topBar =
-                        { TopAppBar(title = {Text("Top App Bar")}, actions = {
+                    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+                    val scope = rememberCoroutineScope()
 
-                        })},
-                        floatingActionButtonPosition = FabPosition.End,
-                        floatingActionButton = { FloatingActionButton(onClick = {}){} }
-                            ) {
-                        Column(modifier = Modifier.padding(it)) {
-                            WelcomeCard()
-                            MainOptions()
+                    ModalNavigationDrawer(
+                        drawerState = drawerState,
+                        drawerContent = {
+                            ModalDrawerSheet {
+                                NavigationDrawerItem(
+                                    label = { Text(text = "Drawer Item") },
+                                    selected = false,
+                                    onClick = { /*TODO*/ }
+                                )
+                                NavigationDrawerItem(
+                                    label = { Text(text = "Drawer Item") },
+                                    selected = false,
+                                    onClick = { /*TODO*/ }
+                                )
+                                NavigationDrawerItem(
+                                    label = { Text(text = "Drawer Item") },
+                                    selected = false,
+                                    onClick = { /*TODO*/ }
+                                )
+                                NavigationDrawerItem(
+                                    label = { Text(text = "Drawer Item") },
+                                    selected = false,
+                                    onClick = { /*TODO*/ }
+                                )
+                                NavigationDrawerItem(
+                                    label = { Text(text = "Drawer Item") },
+                                    selected = false,
+                                    onClick = { /*TODO*/ }
+                                )
+                                NavigationDrawerItem(
+                                    label = { Text(text = "Drawer Item") },
+                                    selected = false,
+                                    onClick = { /*TODO*/ }
+                                )
+
+                            }
+                        }
+                    )
+                    {
+                        Scaffold (
+                            topBar = {
+                                TopAppBar(
+                                    title = { Text(text = "Bajeti") },
+                                )
+                            }
+                            ){
+                            Column(modifier = Modifier.padding(it)) {
+                                WelcomeCard()
+                                MainOptions()
+                            }
                         }
                     }
                 }
