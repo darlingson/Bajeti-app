@@ -7,4 +7,6 @@
     <string name="title_activity_other_expenses">OtherExpensesActivity</string>
     <string name="title_activity_month_budget">MonthBudgetActivity</string>
     <string name="title_activity_stats">StatsActivity</string>
+    <string name="title_activity_budget">BudgetActivity</string>
+    <string name="title_activity_about">AboutActivity</string>
 </resources>

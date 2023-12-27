@@ -1,5 +1,6 @@
 package com.codeshinobi.bajeti
 
+import android.accounts.Account
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -48,17 +49,24 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.codeshinobi.bajeti.Models.ExpensesDatabase
 import com.codeshinobi.bajeti.Repositories.ExpenseRepository
 import com.codeshinobi.bajeti.Repositories.MonthTotalRepository
 import com.codeshinobi.bajeti.Repositories.OtherExpensesRepository
 import com.codeshinobi.bajeti.Repositories.TransportExpensesRepository
 import com.codeshinobi.bajeti.Repositories.UtilityExpensesRepository
+import com.codeshinobi.bajeti.activities.AboutActivity
+import com.codeshinobi.bajeti.activities.BudgetActivity
 import com.codeshinobi.bajeti.activities.ExpensesActivity
 import com.codeshinobi.bajeti.activities.MonthBudgetActivity
 import com.codeshinobi.bajeti.activities.OtherExpensesActivity
+import com.codeshinobi.bajeti.activities.StatsActivity
 import com.codeshinobi.bajeti.activities.TransportExpensesActivity
 import com.codeshinobi.bajeti.activities.UtilitiesActivity
+import com.codeshinobi.bajeti.activities.screens.DrawerScreens
 import com.codeshinobi.bajeti.ui.theme.BajetiTheme
 import kotlinx.coroutines.launch
 import java.text.DateFormat
@@ -78,6 +86,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
+                    val navController = rememberNavController()
                     val context = LocalContext.current
                     var scaffoldState by remember { mutableStateOf(DrawerValue.Closed) }
                     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -88,40 +97,52 @@ class MainActivity : ComponentActivity() {
                         drawerContent = {
                             ModalDrawerSheet {
                                 NavigationDrawerItem(
-                                    label = { Text(text = "Drawer Item") },
+                                    label = { Text(text = "Home") },
                                     selected = false,
                                     onClick = { /*TODO*/ }
                                 )
                                 NavigationDrawerItem(
-                                    label = { Text(text = "Drawer Item") },
+                                    label = { Text(text = "Stats") },
                                     selected = false,
-                                    onClick = { /*TODO*/ }
+                                    onClick = {
+                                        val intent = Intent(context, StatsActivity::class.java)
+                                        context.startActivity(intent)
+                                    }
                                 )
                                 NavigationDrawerItem(
-                                    label = { Text(text = "Drawer Item") },
+                                    label = { Text(text = "Budget") },
                                     selected = false,
-                                    onClick = { /*TODO*/ }
+                                    onClick = {
+                                        val intent = Intent(context, BudgetActivity::class.java)
+                                        context.startActivity(intent)
+                                    }
                                 )
                                 NavigationDrawerItem(
-                                    label = { Text(text = "Drawer Item") },
+                                    label = { Text(text = "About") },
                                     selected = false,
-                                    onClick = { /*TODO*/ }
+                                    onClick = {
+                                        val intent = Intent(context, AboutActivity::class.java)
+                                        context.startActivity(intent)
+                                    }
                                 )
-                                NavigationDrawerItem(
-                                    label = { Text(text = "Drawer Item") },
-                                    selected = false,
-                                    onClick = { /*TODO*/ }
-                                )
-                                NavigationDrawerItem(
-                                    label = { Text(text = "Drawer Item") },
-                                    selected = false,
-                                    onClick = { /*TODO*/ }
-                                )
-
                             }
                         }
                     )
                     {
+                        NavHost(
+navController = navController,
+startDestination = DrawerScreens.Home.route
+) {
+    composable(DrawerScreens.Home.route) {
+
+    }
+    composable(DrawerScreens.Budget.route) {
+
+    }
+    composable(DrawerScreens.Budget.route) {
+
+    }
+}
                         Scaffold (
                             topBar = {
                                 TopAppBar(

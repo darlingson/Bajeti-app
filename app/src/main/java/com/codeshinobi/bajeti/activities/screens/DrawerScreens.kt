@@ -18,15 +18,15 @@ import com.codeshinobi.bajeti.R
 
 sealed class DrawerScreens(val title: String, val route: String) {
     object Home : DrawerScreens("Home", "home")
-    object Account : DrawerScreens("Stats", "stats")
-    object Help : DrawerScreens( "Budget", "budget")
+    object Stats : DrawerScreens("Stats", "stats")
+    object Budget : DrawerScreens( "Budget", "budget")
     object About : DrawerScreens("About", "about")
 }
 
 private val screens = listOf(
     DrawerScreens.Home,
-    DrawerScreens.Account,
-    DrawerScreens.Help,
+    DrawerScreens.Stats,
+    DrawerScreens.Budget,
     DrawerScreens.About
 )
 
