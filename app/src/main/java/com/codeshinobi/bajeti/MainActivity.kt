@@ -17,16 +17,22 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -45,7 +51,6 @@ import com.codeshinobi.bajeti.activities.MonthBudgetActivity
 import com.codeshinobi.bajeti.activities.OtherExpensesActivity
 import com.codeshinobi.bajeti.activities.TransportExpensesActivity
 import com.codeshinobi.bajeti.activities.UtilitiesActivity
-import com.codeshinobi.bajeti.activities.screens.Drawer
 import com.codeshinobi.bajeti.ui.theme.BajetiTheme
 import kotlinx.coroutines.launch
 import java.text.DateFormat
@@ -55,6 +60,7 @@ import java.util.Date
 
 class MainActivity : ComponentActivity() {
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -72,23 +78,21 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                     val context = LocalContext.current
-                    ModalNavigationDrawer(
-                        drawerContent = {
-                            Drawer(
-                                modifier = Modifier.fillMaxHeight(),
-                                onDestinationClicked = {
-                                    openDrawer()
-                                }
-                            )
-                        },
-                        drawerState = drawerState,
+//                    val scaffoldState = rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
+                    var scaffoldState by remember { mutableStateOf(DrawerValue.Closed) }
+                    Scaffold(
+//                        scaffoldState = scaffoldState,
+                        topBar =
+                        { TopAppBar(title = {Text("Top App Bar")}, actions = {
 
-                    ) {
-                        
-                    }
-                    Column() {
-                        WelcomeCard()
-                        MainOptions()
+                        })},
+                        floatingActionButtonPosition = FabPosition.End,
+                        floatingActionButton = { FloatingActionButton(onClick = {}){} }
+                            ) {
+                        Column(modifier = Modifier.padding(it)) {
+                            WelcomeCard()
+                            MainOptions()
+                        }
                     }
                 }
             }
