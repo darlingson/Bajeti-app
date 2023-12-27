@@ -1,6 +1,7 @@
 package com.codeshinobi.bajeti.activities.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,11 +16,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.codeshinobi.bajeti.R
 
-sealed class DrawerScreens(val title: String) {
-    object Home : DrawerScreens("Home")
-    object Account : DrawerScreens("Stats")
-    object Help : DrawerScreens( "Budget")
-    object About : DrawerScreens("About")
+sealed class DrawerScreens(val title: String, val route: String) {
+    object Home : DrawerScreens("Home", "home")
+    object Account : DrawerScreens("Stats", "stats")
+    object Help : DrawerScreens( "Budget", "budget")
+    object About : DrawerScreens("About", "about")
 }
 
 private val screens = listOf(
@@ -31,7 +32,8 @@ private val screens = listOf(
 
 @Composable
 fun Drawer(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onDestinationClicked: (route: String) -> Unit
 ) {
     Column(
         modifier
@@ -46,14 +48,16 @@ fun Drawer(
             Spacer(Modifier.height(24.dp))
             Text(
                 text = screen.title,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.clickable {
+                    onDestinationClicked(screen.route)
+                }
             )
         }
     }
 }
-
-@Preview
-@Composable
-fun DrawerPreview() {
-        Drawer()
-}
+//@Preview
+//@Composable
+//fun DrawerPreview() {
+//        Drawer()
+//}

@@ -37,10 +37,10 @@ fun TopBar(title: String = "", buttonIcon: ImageVector, onButtonClicked: () -> U
 }
 
 @Composable
-fun Home(openDrawer: () -> Unit) {
+fun About(openDrawer: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
         TopBar(
-            title = "Home",
+            title = "About",
             buttonIcon = Icons.Filled.Menu,
             onButtonClicked = { openDrawer() }
         )
@@ -48,16 +48,16 @@ fun Home(openDrawer: () -> Unit) {
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "Home Page content here.")
+            Text(text = "About.")
         }
     }
 }
 
 @Composable
-fun Account(openDrawer: () -> Unit) {
+fun Budget(openDrawer: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
         TopBar(
-            title = "Account",
+            title = "Budget",
             buttonIcon = Icons.Filled.Menu,
             onButtonClicked = { openDrawer() }
         )
@@ -65,16 +65,16 @@ fun Account(openDrawer: () -> Unit) {
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "Account.", style = MaterialTheme.typography.titleMedium)
+            Text(text = "Budget.", style = MaterialTheme.typography.titleMedium)
         }
     }
 }
 
 @Composable
-fun Help(navController: NavController) {
+fun Stats(navController: NavController) {
     Column(modifier = Modifier.fillMaxSize()) {
         TopBar(
-            title = "Help",
+            title = "Stats",
             buttonIcon = Icons.Filled.ArrowBack,
             onButtonClicked = { navController.popBackStack() }
         )
@@ -82,7 +82,7 @@ fun Help(navController: NavController) {
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "Help.", style = MaterialTheme.typography.bodyLarge)
+            Text(text = "Stats.", style = MaterialTheme.typography.bodyLarge)
         }
     }
 }

@@ -15,13 +15,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -40,7 +45,9 @@ import com.codeshinobi.bajeti.activities.MonthBudgetActivity
 import com.codeshinobi.bajeti.activities.OtherExpensesActivity
 import com.codeshinobi.bajeti.activities.TransportExpensesActivity
 import com.codeshinobi.bajeti.activities.UtilitiesActivity
+import com.codeshinobi.bajeti.activities.screens.Drawer
 import com.codeshinobi.bajeti.ui.theme.BajetiTheme
+import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -55,9 +62,30 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.background,
                 ) {
+                    val drawerState = rememberDrawerState(DrawerValue.Closed)
+                    val scope = rememberCoroutineScope()
+                    val openDrawer = {
+                        scope.launch {
+                            drawerState.open()
+                        }
+                    }
                     val context = LocalContext.current
+                    ModalNavigationDrawer(
+                        drawerContent = {
+                            Drawer(
+                                modifier = Modifier.fillMaxHeight(),
+                                onDestinationClicked = {
+                                    openDrawer()
+                                }
+                            )
+                        },
+                        drawerState = drawerState,
+
+                    ) {
+                        
+                    }
                     Column() {
                         WelcomeCard()
                         MainOptions()
