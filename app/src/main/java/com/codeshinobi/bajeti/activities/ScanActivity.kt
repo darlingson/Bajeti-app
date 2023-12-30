@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.camera.view.PreviewView
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.rememberAsyncImagePainter
 import com.codeshinobi.bajeti.activities.ui.theme.BajetiTheme
 
@@ -65,6 +67,9 @@ class ScanActivity : ComponentActivity() {
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ScanMainContent(getContent: ActivityResultLauncher<String>, selectedImageUri: Uri?) {
+    var scannedText by remember {
+        mutableStateOf("")
+    }
     val imageUrl = remember {
         mutableStateOf<Uri?>(null)
     }
@@ -93,6 +98,9 @@ fun ScanMainContent(getContent: ActivityResultLauncher<String>, selectedImageUri
             Button(onClick = { /*TODO*/ }) {
                 Text(text = "Scan Image")
             }
+            AndroidView(factory = {
+                PreviewView(context = it)
+            })
         }
     }
 }
