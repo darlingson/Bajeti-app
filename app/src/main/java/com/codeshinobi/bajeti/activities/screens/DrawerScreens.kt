@@ -21,13 +21,15 @@ sealed class DrawerScreens(val title: String, val route: String) {
     object Stats : DrawerScreens("Stats", "stats")
     object Budget : DrawerScreens( "Budget", "budget")
     object About : DrawerScreens("About", "about")
+    object Scan : DrawerScreens("Scan", "scan")
 }
 
 private val screens = listOf(
     DrawerScreens.Home,
     DrawerScreens.Stats,
     DrawerScreens.Budget,
-    DrawerScreens.About
+    DrawerScreens.About,
+    DrawerScreens.Scan
 )
 
 @Composable

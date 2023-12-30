@@ -1,6 +1,5 @@
 package com.codeshinobi.bajeti
 
-import android.accounts.Account
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -14,17 +13,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
@@ -48,7 +40,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -68,7 +59,6 @@ import com.codeshinobi.bajeti.activities.TransportExpensesActivity
 import com.codeshinobi.bajeti.activities.UtilitiesActivity
 import com.codeshinobi.bajeti.activities.screens.DrawerScreens
 import com.codeshinobi.bajeti.ui.theme.BajetiTheme
-import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -130,26 +120,32 @@ class MainActivity : ComponentActivity() {
                     )
                     {
                         NavHost(
-navController = navController,
-startDestination = DrawerScreens.Home.route
-) {
-    composable(DrawerScreens.Home.route) {
+                            navController = navController,
+                            startDestination = DrawerScreens.Home.route
+                        ) {
+                            composable(DrawerScreens.Home.route) {
 
-    }
-    composable(DrawerScreens.Budget.route) {
+                            }
+                            composable(DrawerScreens.Budget.route) {
 
-    }
-    composable(DrawerScreens.Budget.route) {
+                            }
+                            composable(DrawerScreens.Stats.route) {
 
-    }
-}
-                        Scaffold (
+                            }
+                            composable(DrawerScreens.About.route) {
+
+                            }
+                            composable(DrawerScreens.Scan.route) {
+
+                            }
+                        }
+                        Scaffold(
                             topBar = {
                                 TopAppBar(
                                     title = { Text(text = "Bajeti") },
                                 )
                             }
-                            ){
+                        ) {
                             Column(modifier = Modifier.padding(it)) {
                                 WelcomeCard()
                                 MainOptions()
@@ -169,22 +165,40 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         modifier = modifier
     )
 }
+
 @Composable
 fun MainOptions() {
     Column {
-        MainOptionsCard(text = "Food", modifier = Modifier.fillMaxWidth(), ExpensesActivity::class.java)
-        MainOptionsCard(text = "Transportation", modifier = Modifier.fillMaxWidth(),TransportExpensesActivity::class.java)
-        MainOptionsCard(text = "Other Expenses", modifier = Modifier.fillMaxWidth(),OtherExpensesActivity::class.java)
-        MainOptionsCard(text = "Utilities", modifier = Modifier.fillMaxWidth(),UtilitiesActivity::class.java)
+        MainOptionsCard(
+            text = "Food",
+            modifier = Modifier.fillMaxWidth(),
+            ExpensesActivity::class.java
+        )
+        MainOptionsCard(
+            text = "Transportation",
+            modifier = Modifier.fillMaxWidth(),
+            TransportExpensesActivity::class.java
+        )
+        MainOptionsCard(
+            text = "Other Expenses",
+            modifier = Modifier.fillMaxWidth(),
+            OtherExpensesActivity::class.java
+        )
+        MainOptionsCard(
+            text = "Utilities",
+            modifier = Modifier.fillMaxWidth(),
+            UtilitiesActivity::class.java
+        )
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainOptionsCard(text: String,
-                    modifier: Modifier = Modifier.fillMaxWidth(),
-                    activity: Class<*>
-)
-{
+fun MainOptionsCard(
+    text: String,
+    modifier: Modifier = Modifier.fillMaxWidth(),
+    activity: Class<*>
+) {
 
     val context = LocalContext.current //getting the context
 
@@ -198,7 +212,6 @@ fun MainOptionsCard(text: String,
     val sumOfFood: State<Int?>? = expenseRepository?.sumofExpenses?.observeAsState(initial = 0)
 
 
-
     //getting the repository and DAO for the expenseEntity
     val transportRepository: TransportExpensesRepository?
 //    val expensesDatabase = ExpensesDatabase.getInstance(context)
@@ -206,30 +219,34 @@ fun MainOptionsCard(text: String,
     transportRepository = transportexpenseDAO?.let { TransportExpensesRepository(it) }
 
     //getting the sum of expenses and setting it into a state
-    val sumOfTransport: State<Int?>? = transportRepository?.sumofTransportExpenses?.observeAsState(initial = 0)
+    val sumOfTransport: State<Int?>? =
+        transportRepository?.sumofTransportExpenses?.observeAsState(initial = 0)
 
-    val otherExpensesRepository :OtherExpensesRepository?
+    val otherExpensesRepository: OtherExpensesRepository?
     val otherExpensesDAO = expensesDatabase?.OtherExpensesDAO
     otherExpensesRepository = otherExpensesDAO?.let { OtherExpensesRepository(it) }
-    val sumOfOtherExpenses: State<Int?>? = otherExpensesRepository?.sumofOtherExpenses?.observeAsState(initial = 0)
+    val sumOfOtherExpenses: State<Int?>? =
+        otherExpensesRepository?.sumofOtherExpenses?.observeAsState(initial = 0)
 
     val utilityExpensesRepository: UtilityExpensesRepository?
     val utilityExpensesDAO = expensesDatabase?.UtilitiesDAO
     utilityExpensesRepository = utilityExpensesDAO?.let { UtilityExpensesRepository(it) }
-    val sumOfUtilityExpenses:State<Int?>? = utilityExpensesRepository?.sumofUtilityExpenses?.observeAsState(initial = 0)
+    val sumOfUtilityExpenses: State<Int?>? =
+        utilityExpensesRepository?.sumofUtilityExpenses?.observeAsState(initial = 0)
 
     Card(
-        shape =MaterialTheme.shapes.large,
+        shape = MaterialTheme.shapes.large,
         elevation = CardDefaults.cardElevation(
             defaultElevation = 10.dp
         ),
         modifier = modifier
             .padding(10.dp)
             .height(80.dp),
-        onClick = { Log.d("Click", "CardExample: Card Click")
+        onClick = {
+            Log.d("Click", "CardExample: Card Click")
 //            context.startActivity(Intent(context, MainOption::class.java))
             context.startActivity(Intent(context, activity))
-            },
+        },
         enabled = true
     ) {
         Row(horizontalArrangement = Arrangement.Absolute.SpaceBetween) {
@@ -250,7 +267,7 @@ fun MainOptionsCard(text: String,
                     .fillMaxHeight()
                     .weight(0.49f)
             ) {
-                if (activity == ExpensesActivity::class.java){
+                if (activity == ExpensesActivity::class.java) {
                     sumOfFood?.value?.let {
                         Text(
                             text = sumOfFood.value.toString(),
@@ -258,7 +275,7 @@ fun MainOptionsCard(text: String,
                             textAlign = TextAlign.End
                         )
                     }
-                }else if (activity == TransportExpensesActivity::class.java){
+                } else if (activity == TransportExpensesActivity::class.java) {
                     sumOfTransport?.value?.let {
                         Text(
                             text = sumOfTransport.value.toString(),
@@ -266,8 +283,7 @@ fun MainOptionsCard(text: String,
                             textAlign = TextAlign.Center
                         )
                     }
-                }
-                else if (activity == OtherExpensesActivity::class.java){
+                } else if (activity == OtherExpensesActivity::class.java) {
                     sumOfOtherExpenses?.value?.let {
                         Text(
                             text = sumOfOtherExpenses.value.toString(),
@@ -275,8 +291,7 @@ fun MainOptionsCard(text: String,
                             textAlign = TextAlign.Center
                         )
                     }
-                }
-                else if (activity == UtilitiesActivity::class.java){
+                } else if (activity == UtilitiesActivity::class.java) {
                     sumOfUtilityExpenses?.value?.let {
                         Text(
                             text = sumOfUtilityExpenses.value.toString(),
@@ -290,9 +305,10 @@ fun MainOptionsCard(text: String,
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WelcomeCard(){
+fun WelcomeCard() {
     val dateFormat: DateFormat = SimpleDateFormat("MM")
     val date = Date()
     var currentMonth = dateFormat.format(date)
@@ -310,10 +326,11 @@ fun WelcomeCard(){
     val monthTotalDAO = expensesDatabase?.MonthlyTotalDAO
     monthTotalRepository = monthTotalDAO?.let { MonthTotalRepository(it) }
 
-    val sumOfBudget: State<Int>? = monthTotalRepository?.gettotalBudget(currentIndex)?.observeAsState(initial = 0)
+    val sumOfBudget: State<Int>? =
+        monthTotalRepository?.gettotalBudget(currentIndex)?.observeAsState(initial = 0)
 
     Card(
-        shape =MaterialTheme.shapes.large,
+        shape = MaterialTheme.shapes.large,
         elevation = CardDefaults.cardElevation(
             defaultElevation = 10.dp
         ),
@@ -322,9 +339,9 @@ fun WelcomeCard(){
             .height(200.dp),
         onClick = {
             Log.d("Click", "CardExample: Card Click")
-            context.startActivity(Intent(context,MonthBudgetActivity::class.java))
+            context.startActivity(Intent(context, MonthBudgetActivity::class.java))
 //            context.startActivity(Intent(context, ExpensesActivity::class.java))
-                  },
+        },
         enabled = true
     ) {
         Column() {
@@ -341,6 +358,7 @@ fun WelcomeCard(){
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
