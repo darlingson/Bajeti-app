@@ -1,63 +1,46 @@
-package com.codeshinobi.bajeti
+package com.codeshinobi.bajeti.activities
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.codeshinobi.bajeti.ui.theme.BajetiTheme
+import com.codeshinobi.bajeti.activities.ui.theme.BajetiTheme
 
-@OptIn(ExperimentalComposeUiApi::class)
 class ScanActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ScanMainContent()
+            BajetiTheme {
+                // A surface container using the 'background' color from the theme
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    Greeting8("Android")
+                }
+            }
         }
     }
+}
 
+@Composable
+fun Greeting8(name: String, modifier: Modifier = Modifier) {
+    Text(
+        text = "Hello $name!",
+        modifier = modifier
+    )
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
-@Composable
-fun ScanMainContent() {
-    Column(
-        Modifier.fillMaxWidth().fillMaxHeight(),
-    ) {
-        Column(
-            Modifier.fillMaxWidth().fillMaxHeight(0.8f),
-        ) {
-            Text("Top Column")
-        }
-        Column(
-            Modifier.fillMaxWidth().fillMaxHeight(0.2f),
-        ) {
-            Text("Bottom Column")
-        }
-    }
-}
-@Composable
-fun MyComposable() {
-    Box(modifier = Modifier.fillMaxSize()) {
-        CoilImage(
-            data = "https://example.com/image.jpg",
-            contentDescription = "Description of the image"
-        )
-    }
-}
 @Preview(showBackground = true)
 @Composable
-fun ScanPreview() {
+fun GreetingPreview() {
     BajetiTheme {
-//        Greeting("Darlingson")
-        ScanMainContent()
+        Greeting8("Android")
     }
 }
