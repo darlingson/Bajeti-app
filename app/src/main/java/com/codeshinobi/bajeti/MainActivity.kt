@@ -54,6 +54,7 @@ import com.codeshinobi.bajeti.activities.BudgetActivity
 import com.codeshinobi.bajeti.activities.ExpensesActivity
 import com.codeshinobi.bajeti.activities.MonthBudgetActivity
 import com.codeshinobi.bajeti.activities.OtherExpensesActivity
+import com.codeshinobi.bajeti.activities.ScanActivity
 import com.codeshinobi.bajeti.activities.StatsActivity
 import com.codeshinobi.bajeti.activities.TransportExpensesActivity
 import com.codeshinobi.bajeti.activities.UtilitiesActivity
