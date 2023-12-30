@@ -115,6 +115,14 @@ class MainActivity : ComponentActivity() {
                                         context.startActivity(intent)
                                     }
                                 )
+                                NavigationDrawerItem(
+                                    label = { Text(text = "Scan") },
+                                    selected = false,
+                                    onClick = {
+                                        val intent = Intent(context, UtilitiesActivity::class.java)
+                                        context.startActivity(intent)
+                                    }
+                                )
                             }
                         }
                     )
