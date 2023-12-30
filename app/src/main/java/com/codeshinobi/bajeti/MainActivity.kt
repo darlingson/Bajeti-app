@@ -119,7 +119,7 @@ class MainActivity : ComponentActivity() {
                                     label = { Text(text = "Scan") },
                                     selected = false,
                                     onClick = {
-                                        val intent = Intent(context, UtilitiesActivity::class.java)
+                                        val intent = Intent(context, ScanActivity::class.java)
                                         context.startActivity(intent)
                                     }
                                 )
@@ -367,11 +367,11 @@ fun WelcomeCard() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    BajetiTheme {
-//        Greeting("Darlingson")
-        MainOptions()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun GreetingPreview() {
+//    BajetiTheme {
+////        Greeting("Darlingson")
+//        MainOptions()
+//    }
+//}
