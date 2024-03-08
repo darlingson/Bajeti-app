@@ -1,6 +1,5 @@
 package com.codeshinobi.bajeti.newUI
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,7 +26,9 @@ import androidx.compose.ui.unit.sp
 fun HomeSummary() {
 //    Text(text = "Summary")
     Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
         SummaryBudgetCard()
         Divider(
@@ -36,6 +37,7 @@ fun HomeSummary() {
         MonthlyExpensesSummaryList()
     }
 }
+
 @Composable
 fun SummaryBudgetCard() {
     var budget: Double = 100000.0
@@ -72,6 +74,7 @@ fun SummaryBudgetCard() {
         }
     }
 }
+
 @Composable
 fun MonthlyExpensesSummaryList() {
     Text(text = "Expenses Summary")
@@ -85,6 +88,7 @@ fun MonthlyExpensesSummaryList() {
         ExpenseCard(name = "Spaghetti", amount = "1,200", category = "Food", date = "2023-05-01")
     }
 }
+
 @Composable
 fun ExpenseCard(
     name: String,
