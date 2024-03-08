@@ -1,10 +1,12 @@
 package com.codeshinobi.bajeti.newUI
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -15,8 +17,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun HomeSummary() {
@@ -33,14 +38,37 @@ fun HomeSummary() {
 }
 @Composable
 fun SummaryBudgetCard() {
-    Card {
+    var budget: Double = 100000.0
+    var currentSpend: Double = 80000.0
+    val spendPercentage = (currentSpend / budget) * 100
+    val backgroundColor = when {
+        spendPercentage < 70 -> Color.Green
+        spendPercentage in 71.0..99.0 -> Color.Magenta
+        else -> Color.Red
+    }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .height(100.dp)
+    ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .padding(16.dp)
         ) {
-            Text(text = "Budget : K10,000")
-            Text(text = "Current Spend : K10,000")
+            Text(
+                text = "Budget : K${budget.toInt()}",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "Current Spend : K${currentSpend.toInt()}",
+                color = backgroundColor,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
+            )
         }
     }
 }
