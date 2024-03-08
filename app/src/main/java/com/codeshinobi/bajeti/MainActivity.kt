@@ -43,6 +43,10 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.codeshinobi.bajeti.newUI.BudgetsScreen
+import com.codeshinobi.bajeti.newUI.ExpensesScreen
+import com.codeshinobi.bajeti.newUI.HomeSummary
+import com.codeshinobi.bajeti.newUI.ReportsScreen
 import com.codeshinobi.bajeti.ui.theme.BajetiTheme
 
 data class TabBarItem(
@@ -75,16 +79,20 @@ class MainActivity : ComponentActivity() {
                     Scaffold(bottomBar = { TabView(tabBarItems, navController) }) {
                         NavHost(navController = navController, startDestination = homeTab.title, modifier = Modifier.padding(it)) {
                             composable(homeTab.title) {
-                                Text(homeTab.title)
+//                                Text(homeTab.title)
+                                HomeSummary()
                             }
                             composable(expensesTab.title) {
-                                Text(expensesTab.title)
+//                                Text(expensesTab.title)
+                                ExpensesScreen()
                             }
                             composable(budgetsTab.title) {
-                                Text(budgetsTab.title)
+//                                Text(budgetsTab.title)
+                                BudgetsScreen()
                             }
                             composable(reportsTab.title) {
-                                MoreView()
+//                                MoreView()
+                                ReportsScreen()
                             }
                         }
                     }
