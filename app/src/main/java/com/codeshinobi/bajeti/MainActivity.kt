@@ -7,14 +7,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.outlined.DateRange
+import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.List
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.ShoppingCart
+import androidx.compose.material.icons.twotone.Email
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -51,12 +57,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             // setting up the individual tabs
             val homeTab = TabBarItem(title = "Home", selectedIcon = Icons.Filled.Home, unselectedIcon = Icons.Outlined.Home)
-            val alertsTab = TabBarItem(title = "Alerts", selectedIcon = Icons.Filled.Notifications, unselectedIcon = Icons.Outlined.Notifications, badgeAmount = 7)
-            val settingsTab = TabBarItem(title = "Settings", selectedIcon = Icons.Filled.Settings, unselectedIcon = Icons.Outlined.Settings)
-            val moreTab = TabBarItem(title = "More", selectedIcon = Icons.Filled.List, unselectedIcon = Icons.Outlined.List)
+            val expensesTab = TabBarItem(title = "Expenses", selectedIcon = Icons.Filled.ShoppingCart, unselectedIcon = Icons.Outlined.ShoppingCart, badgeAmount = 7)
+            val budgetsTab = TabBarItem(title = "Budgets", selectedIcon = Icons.Filled.DateRange, unselectedIcon = Icons.Outlined.DateRange)
+            val reportsTab = TabBarItem(title = "Reports", selectedIcon = Icons.TwoTone.Email, unselectedIcon = Icons.Outlined.Email)
 
             // creating a list of all the tabs
-            val tabBarItems = listOf(homeTab, alertsTab, settingsTab, moreTab)
+            val tabBarItems = listOf(homeTab, expensesTab, budgetsTab, reportsTab)
 
             // creating our navController
             val navController = rememberNavController()
@@ -71,13 +77,13 @@ class MainActivity : ComponentActivity() {
                             composable(homeTab.title) {
                                 Text(homeTab.title)
                             }
-                            composable(alertsTab.title) {
-                                Text(alertsTab.title)
+                            composable(expensesTab.title) {
+                                Text(expensesTab.title)
                             }
-                            composable(settingsTab.title) {
-                                Text(settingsTab.title)
+                            composable(budgetsTab.title) {
+                                Text(budgetsTab.title)
                             }
-                            composable(moreTab.title) {
+                            composable(reportsTab.title) {
                                 MoreView()
                             }
                         }
