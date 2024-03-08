@@ -28,7 +28,8 @@ class TextRecognitionAnalyzer(
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val textRecognizer: TextRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
-    @androidx.annotation.OptIn(ExperimentalGetImage::class) @OptIn(ExperimentalGetImage::class)
+    @OptIn(ExperimentalGetImage::class)
+    @androidx.annotation.OptIn(ExperimentalGetImage::class)
     override fun analyze(imageProxy: ImageProxy) {
         scope.launch {
             val mediaImage: Image = imageProxy.image ?: run { imageProxy.close(); return@launch }
