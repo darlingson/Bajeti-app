@@ -2,9 +2,12 @@ package com.codeshinobi.bajeti.newUI
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
@@ -12,6 +15,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -57,22 +61,24 @@ fun ExpensesScreen() {
                 sheetState = sheetState
             ) {
                 // Sheet content
-                Button(onClick = {
-                    scope.launch { sheetState.hide() }.invokeOnCompletion {
-                        if (!sheetState.isVisible) {
-                            showBottomSheet = false
+                Column(
+                    modifier = Modifier.fillMaxHeight().fillMaxWidth()
+                ) {
+                    Text("Add expense")
+                    AddExpenseForm()
+                    Row {
+                        Text("Hide bottom sheet", modifier = Modifier.padding(contentPadding))
+                        Button(onClick = { /*TODO*/ }) {
+                            Text(text = "+")
                         }
                     }
-                }) {
-                    Column {
-                        Text("Add expense")
-                        AddExpenseForm()
-                        Row {
-                            Text("Hide bottom sheet", modifier = Modifier.padding(contentPadding))
-                            Button(onClick = { /*TODO*/ }) {
-                                Text(text = "+")
+                    Button(onClick = {
+                        scope.launch { sheetState.hide() }.invokeOnCompletion {
+                            if (!sheetState.isVisible) {
+                                showBottomSheet = false
                             }
                         }
+                    }) {
                     }
                 }
             }
@@ -88,6 +94,7 @@ fun AddExpenseForm() {
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .height(400.dp)
             .padding(16.dp)
     ) {
         Column(
