@@ -13,6 +13,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,6 +33,40 @@ data class Budget(val amount: Double, val monthName: String, val monthNumber: In
 
 @Composable
 fun BudgetsScreen() {
+    BudgetsScreenTabScreen()
+}
+@Composable
+fun BudgetsScreenTabScreen(){
+    var tabIndex by remember { mutableStateOf(0) }
+
+    val tabs = listOf("Total Budgets", "Current Spend Budget", "Previous Spend Budgets")
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        TabRow(selectedTabIndex = tabIndex) {
+            tabs.forEachIndexed { index, title ->
+                Tab(text = { Text(title) },
+                    selected = tabIndex == index,
+                    onClick = { tabIndex = index }
+                )
+            }
+        }
+        when (tabIndex) {
+            0 -> MonthlyBudgetsTab()
+            1 -> CurrentSpendBudgetTab()
+            2 -> PreviousSpendBudgetsTab()
+        }
+    }
+}
+@Composable
+fun PreviousSpendBudgetsTab(){
+    Text(text = "Previous spend")
+}
+@Composable
+fun CurrentSpendBudgetTab(){
+    Text(text = "Current spend")
+}
+@Composable
+fun MonthlyBudgetsTab(){
     var searchText by remember { mutableStateOf("") }
 
     // Replace this with your actual data fetching logic or use sample data
@@ -74,7 +110,6 @@ fun BudgetsScreen() {
         }
     }
 }
-
 @Composable
 fun BudgetListItem(budget: Budget) {
     Card(
