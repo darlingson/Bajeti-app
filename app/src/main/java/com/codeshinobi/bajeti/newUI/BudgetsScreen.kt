@@ -27,7 +27,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-data class Budget(val name: String, val amount: Double, val category: String, val month: Date)
+data class Budget(val amount: Double, val monthName: String, val monthNumber: Int, val year: Int)
 
 @Composable
 fun BudgetsScreen() {
@@ -54,12 +54,20 @@ fun BudgetsScreen() {
 
         // List of Budgets
         LazyColumn {
-            val currentMonth = Calendar.getInstance().time
+            val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
+            val currentYear = Calendar.getInstance().get(Calendar.YEAR)
             item {
-                BudgetListItem(Budget("This Month's Budget", 1000.0, "General", currentMonth))
+                BudgetListItem(
+                    Budget(
+                        1000.0,
+                        SimpleDateFormat("MMMM", Locale.getDefault()).format(Calendar.getInstance().time),
+                        currentMonth,
+                        currentYear
+                    )
+                )
             }
-            items(budgets.filter { it.name.contains(searchText, ignoreCase = true) }) { budget ->
-                if (budget.month != currentMonth) {
+            items(budgets.filter { it.monthName.contains(searchText, ignoreCase = true) }) { budget ->
+                if (budget.monthNumber != currentMonth || budget.year != currentYear) {
                     BudgetListItem(budget = budget)
                 }
             }
@@ -78,13 +86,9 @@ fun BudgetListItem(budget: Budget) {
             modifier = Modifier
                 .padding(16.dp)
         ) {
-            Text(text = budget.name, style = MaterialTheme.typography.bodySmall)
+            Text(text = budget.monthName, style = MaterialTheme.typography.bodySmall)
             Text(text = "Amount: ${budget.amount}", style = MaterialTheme.typography.bodyMedium)
-            Text(text = "Category: ${budget.category}", style = MaterialTheme.typography.bodyMedium)
-            Text(
-                text = "Month: ${SimpleDateFormat("MMMM yyyy", Locale.getDefault()).format(budget.month)}",
-                style = MaterialTheme.typography.bodyLarge
-            )
+            Text(text = "Year: ${budget.year}", style = MaterialTheme.typography.bodyMedium)
         }
     }
 }
@@ -92,11 +96,21 @@ fun BudgetListItem(budget: Budget) {
 // Helper function to generate sample budgets
 fun getSampleBudgets(): List<Budget> {
     return listOf(
-        Budget("Groceries", 300.0, "Food", Date()),
-        Budget("Clothing", 150.0, "Shopping", Date()),
-        Budget("Utilities", 200.0, "Bills", Date()),
-        Budget("This Month's Budget", 1000.0, "General", Calendar.getInstance().time),
-        // Add more sample budgets as needed
+        Budget(1000.0, "January", 0, 2023),
+        Budget(2000.0, "February", 1, 2023),
+        Budget(3000.0, "March", 2, 2023),
+        Budget(4000.0, "April", 3, 2023),
+        Budget(5000.0, "May", 4, 2023),
+        Budget(6000.0, "June", 5, 2023),
+        Budget(7000.0, "July", 6, 2023),
+        Budget(8000.0, "August", 7, 2023),
+        Budget(9000.0, "September", 8, 2023),
+        Budget(10000.0, "October", 9, 2023),
+        Budget(11000.0, "November", 10, 2023),
+        Budget(12000.0, "December", 11, 2023),
+        Budget(12000.0, "January", 0, 2024),
+        Budget(12000.0, "February", 1, 2024),
+        Budget(12000.0, "March", 2, 2024),
     )
 }
 
