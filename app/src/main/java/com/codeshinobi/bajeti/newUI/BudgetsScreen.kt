@@ -1,6 +1,5 @@
 package com.codeshinobi.bajeti.newUI
 
-import android.graphics.drawable.Icon
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,7 +25,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 
 data class Budget(val amount: Double, val monthName: String, val monthNumber: Int, val year: Int)
@@ -35,8 +33,9 @@ data class Budget(val amount: Double, val monthName: String, val monthNumber: In
 fun BudgetsScreen() {
     BudgetsScreenTabScreen()
 }
+
 @Composable
-fun BudgetsScreenTabScreen(){
+fun BudgetsScreenTabScreen() {
     var tabIndex by remember { mutableStateOf(0) }
 
     val tabs = listOf("Total Budgets", "Current Spend Budget", "Previous Spend Budgets")
@@ -57,16 +56,19 @@ fun BudgetsScreenTabScreen(){
         }
     }
 }
+
 @Composable
-fun PreviousSpendBudgetsTab(){
+fun PreviousSpendBudgetsTab() {
     Text(text = "Previous spend")
 }
+
 @Composable
-fun CurrentSpendBudgetTab(){
+fun CurrentSpendBudgetTab() {
     Text(text = "Current spend")
 }
+
 @Composable
-fun MonthlyBudgetsTab(){
+fun MonthlyBudgetsTab() {
     var searchText by remember { mutableStateOf("") }
 
     // Replace this with your actual data fetching logic or use sample data
@@ -96,13 +98,21 @@ fun MonthlyBudgetsTab(){
                 BudgetListItem(
                     Budget(
                         1000.0,
-                        SimpleDateFormat("MMMM", Locale.getDefault()).format(Calendar.getInstance().time),
+                        SimpleDateFormat(
+                            "MMMM",
+                            Locale.getDefault()
+                        ).format(Calendar.getInstance().time),
                         currentMonth,
                         currentYear
                     )
                 )
             }
-            items(budgets.filter { it.monthName.contains(searchText, ignoreCase = true) }) { budget ->
+            items(budgets.filter {
+                it.monthName.contains(
+                    searchText,
+                    ignoreCase = true
+                )
+            }) { budget ->
                 if (budget.monthNumber != currentMonth || budget.year != currentYear) {
                     BudgetListItem(budget = budget)
                 }
@@ -110,6 +120,7 @@ fun MonthlyBudgetsTab(){
         }
     }
 }
+
 @Composable
 fun BudgetListItem(budget: Budget) {
     Card(
