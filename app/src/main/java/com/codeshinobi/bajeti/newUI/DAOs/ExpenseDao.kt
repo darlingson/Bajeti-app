@@ -17,6 +17,8 @@ interface ExpenseDao {
     suspend fun updateExpense(expense: Expense)
     @Delete
     suspend fun deleteExpense(expense: Expense)
+    @Query("SELECT * FROM expense")
+    fun getAllExpenses(): LiveData<List<Expense>>
     @Query("SELECT * FROM expense WHERE id = :expenseId")
     fun getExpenseById(expenseId: Int): LiveData<Expense>
     @Query("SELECT * FROM expense WHERE month = :month AND year = :year")
