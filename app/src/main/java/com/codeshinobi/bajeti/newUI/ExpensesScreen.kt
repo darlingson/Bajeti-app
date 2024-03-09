@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
@@ -29,10 +30,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.codeshinobi.bajeti.ui.theme.BajetiTheme
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,16 +66,10 @@ fun ExpensesScreen() {
             ) {
                 // Sheet content
                 Column(
-                    modifier = Modifier.fillMaxHeight().fillMaxWidth()
+                    modifier = Modifier.fillMaxHeight().fillMaxWidth().padding(contentPadding)
                 ) {
                     Text("Add expense")
                     AddExpenseForm()
-                    Row {
-                        Text("Hide bottom sheet", modifier = Modifier.padding(contentPadding))
-                        Button(onClick = { /*TODO*/ }) {
-                            Text(text = "+")
-                        }
-                    }
                     Button(onClick = {
                         scope.launch { sheetState.hide() }.invokeOnCompletion {
                             if (!sheetState.isVisible) {
@@ -79,6 +77,7 @@ fun ExpensesScreen() {
                             }
                         }
                     }) {
+                        Text("Close")
                     }
                 }
             }
@@ -87,14 +86,20 @@ fun ExpensesScreen() {
 }
 @Composable
 fun AddExpenseForm() {
+    //getting today's date incase the expense was incurred today
+    val sdf = SimpleDateFormat("dd-MM-yyyy")
+    val todayDate = sdf.format(Date())
+
+    var expenseDate by remember { mutableStateOf(todayDate) }
     var expenseName by remember { mutableStateOf("") }
+    var expenseQuantity by remember { mutableStateOf(1) }
     var expenseAmount by remember { mutableStateOf("") }
     var expenseCategory by remember { mutableStateOf("") }
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(400.dp)
+            .height(600.dp)
             .padding(16.dp)
     ) {
         Column(
@@ -102,6 +107,15 @@ fun AddExpenseForm() {
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
+            // Expense Date
+            OutlinedTextField(
+                value = expenseDate,
+                onValueChange = { expenseDate = it },
+                label = { Text("Expense Date") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            )
             // Expense Name
             OutlinedTextField(
                 value = expenseName,
@@ -111,7 +125,16 @@ fun AddExpenseForm() {
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
             )
-
+            // Expense Quantity
+            OutlinedTextField(
+                value = expenseQuantity.toString(),
+                onValueChange = { expenseQuantity = it.toInt() },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                label = { Text("Expense Quantity") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            )
             // Expense Amount
             OutlinedTextField(
                 value = expenseAmount,
