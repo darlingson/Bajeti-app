@@ -20,6 +20,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -56,6 +58,7 @@ fun ExpensesScreen() {
         }
     ) { contentPadding ->
         // Screen content
+        ExpensesScreenTabScreen()
 
         if (showBottomSheet) {
             ModalBottomSheet(
@@ -66,7 +69,10 @@ fun ExpensesScreen() {
             ) {
                 // Sheet content
                 Column(
-                    modifier = Modifier.fillMaxHeight().fillMaxWidth().padding(contentPadding)
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth()
+                        .padding(contentPadding)
                 ) {
                     Text("Add expense")
                     AddExpenseForm()
@@ -83,6 +89,40 @@ fun ExpensesScreen() {
             }
         }
     }
+}
+@Composable
+fun ExpensesScreenTabScreen() {
+    var tabIndex by remember { mutableStateOf(0) }
+
+    val tabs = listOf("Current", "All", "Search")
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        TabRow(selectedTabIndex = tabIndex) {
+            tabs.forEachIndexed { index, title ->
+                Tab(text = { Text(title) },
+                    selected = tabIndex == index,
+                    onClick = { tabIndex = index }
+                )
+            }
+        }
+        when (tabIndex) {
+            0 -> CurrentMonthExpensesTab()
+            1 -> AllExpensesTab()
+            2 -> SearchExpenses()
+        }
+    }
+}
+@Composable
+fun CurrentMonthExpensesTab() {
+    Text("Current Month Expenses")
+}
+@Composable
+fun AllExpensesTab() {
+    Text("All Expenses")
+}
+@Composable
+fun SearchExpenses() {
+    Text("Search Expenses")
 }
 @Composable
 fun AddExpenseForm() {
