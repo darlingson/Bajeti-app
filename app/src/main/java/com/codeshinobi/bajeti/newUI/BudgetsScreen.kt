@@ -28,7 +28,13 @@ import java.util.Calendar
 import java.util.Locale
 
 data class Budget(val amount: Double, val monthName: String, val monthNumber: Int, val year: Int)
-data class SpendBudget(val monthName: String, val monthNumber: Int, val year: Int, val category: String, val amount: Double)
+data class SpendBudget(
+    val monthName: String,
+    val monthNumber: Int,
+    val year: Int,
+    val category: String,
+    val amount: Double
+)
 
 @Composable
 fun BudgetsScreen() {
@@ -62,7 +68,6 @@ fun BudgetsScreenTabScreen() {
 fun PreviousSpendBudgetsTab() {
     var searchText by remember { mutableStateOf("") }
 
-    // Replace this with your actual data fetching logic or use sample data
     val spendBudgets = getSampleSpendBudgets()
 
     Column(
@@ -85,7 +90,12 @@ fun PreviousSpendBudgetsTab() {
         LazyColumn {
             val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
             val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-            items(spendBudgets.filter { it.category.contains(searchText, ignoreCase = true) }) { spendBudget ->
+            items(spendBudgets.filter {
+                it.category.contains(
+                    searchText,
+                    ignoreCase = true
+                )
+            }) { spendBudget ->
                 SpendBudgetListItem(spendBudget = spendBudget)
             }
         }
@@ -96,7 +106,6 @@ fun PreviousSpendBudgetsTab() {
 fun CurrentSpendBudgetTab() {
     var searchText by remember { mutableStateOf("") }
 
-    // Replace this with your actual data fetching logic or use sample data
     val spendBudgets = getSampleSpendBudgets()
 
     Column(
@@ -119,7 +128,12 @@ fun CurrentSpendBudgetTab() {
         LazyColumn {
             val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
             val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-            items(spendBudgets.filter { it.monthNumber == currentMonth && it.year == currentYear && it.category.contains(searchText, ignoreCase = true) }) { spendBudget ->
+            items(spendBudgets.filter {
+                it.monthNumber == currentMonth && it.year == currentYear && it.category.contains(
+                    searchText,
+                    ignoreCase = true
+                )
+            }) { spendBudget ->
                 SpendBudgetListItem(spendBudget = spendBudget)
             }
         }
@@ -137,14 +151,22 @@ fun SpendBudgetListItem(spendBudget: SpendBudget) {
             modifier = Modifier
                 .padding(16.dp)
         ) {
-            Text(text = "Category: ${spendBudget.category}", style = MaterialTheme.typography.bodyLarge)
-            Text(text = "Amount: ${spendBudget.amount}", style = MaterialTheme.typography.labelMedium)
-            Text(text = "Month: ${spendBudget.monthName} ${spendBudget.year}", style = MaterialTheme.typography.labelMedium)
+            Text(
+                text = "Category: ${spendBudget.category}",
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = "Amount: ${spendBudget.amount}",
+                style = MaterialTheme.typography.labelMedium
+            )
+            Text(
+                text = "Month: ${spendBudget.monthName} ${spendBudget.year}",
+                style = MaterialTheme.typography.labelMedium
+            )
         }
     }
 }
 
-// Helper function to generate sample spend budgets
 fun getSampleSpendBudgets(): List<SpendBudget> {
     return listOf(
         SpendBudget("January", 0, 2022, "Food", 300.0),
@@ -163,7 +185,6 @@ fun getSampleSpendBudgets(): List<SpendBudget> {
 fun MonthlyBudgetsTab() {
     var searchText by remember { mutableStateOf("") }
 
-    // Replace this with your actual data fetching logic or use sample data
     val budgets = getSampleBudgets()
 
     Column(
@@ -231,7 +252,6 @@ fun BudgetListItem(budget: Budget) {
     }
 }
 
-// Helper function to generate sample budgets
 fun getSampleBudgets(): List<Budget> {
     return listOf(
         Budget(1000.0, "January", 0, 2023),
