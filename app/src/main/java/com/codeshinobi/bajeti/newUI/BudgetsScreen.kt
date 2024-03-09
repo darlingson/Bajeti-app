@@ -28,6 +28,7 @@ import java.util.Calendar
 import java.util.Locale
 
 data class Budget(val amount: Double, val monthName: String, val monthNumber: Int, val year: Int)
+data class SpendBudget(val monthName: String, val monthNumber: Int, val year: Int, val category: String, val amount: Double)
 
 @Composable
 fun BudgetsScreen() {
@@ -59,12 +60,103 @@ fun BudgetsScreenTabScreen() {
 
 @Composable
 fun PreviousSpendBudgetsTab() {
-    Text(text = "Previous spend")
+    var searchText by remember { mutableStateOf("") }
+
+    // Replace this with your actual data fetching logic or use sample data
+    val spendBudgets = getSampleSpendBudgets()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        // Search Bar
+        OutlinedTextField(
+            value = searchText,
+            onValueChange = { searchText = it },
+            label = { Text("Search Spend Budgets") },
+            leadingIcon = { Icon(imageVector = Icons.Default.Search, contentDescription = null) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
+        )
+
+        // List of Spend Budgets
+        LazyColumn {
+            val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
+            val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+            items(spendBudgets.filter { it.category.contains(searchText, ignoreCase = true) }) { spendBudget ->
+                SpendBudgetListItem(spendBudget = spendBudget)
+            }
+        }
+    }
 }
 
 @Composable
 fun CurrentSpendBudgetTab() {
-    Text(text = "Current spend")
+    var searchText by remember { mutableStateOf("") }
+
+    // Replace this with your actual data fetching logic or use sample data
+    val spendBudgets = getSampleSpendBudgets()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        // Search Bar
+        OutlinedTextField(
+            value = searchText,
+            onValueChange = { searchText = it },
+            label = { Text("Search Spend Budgets") },
+            leadingIcon = { Icon(imageVector = Icons.Default.Search, contentDescription = null) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
+        )
+
+        // List of Spend Budgets
+        LazyColumn {
+            val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
+            val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+            items(spendBudgets.filter { it.monthNumber == currentMonth && it.year == currentYear && it.category.contains(searchText, ignoreCase = true) }) { spendBudget ->
+                SpendBudgetListItem(spendBudget = spendBudget)
+            }
+        }
+    }
+}
+
+@Composable
+fun SpendBudgetListItem(spendBudget: SpendBudget) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+        ) {
+            Text(text = "Category: ${spendBudget.category}", style = MaterialTheme.typography.bodyLarge)
+            Text(text = "Amount: ${spendBudget.amount}", style = MaterialTheme.typography.labelMedium)
+            Text(text = "Month: ${spendBudget.monthName} ${spendBudget.year}", style = MaterialTheme.typography.labelMedium)
+        }
+    }
+}
+
+// Helper function to generate sample spend budgets
+fun getSampleSpendBudgets(): List<SpendBudget> {
+    return listOf(
+        SpendBudget("January", 0, 2022, "Food", 300.0),
+        SpendBudget("January", 0, 2022, "Shopping", 150.0),
+        SpendBudget("March", 2, 2024, "Bills", 200.0),
+        SpendBudget("March", 2, 2024, "Utilities", 30000.0),
+        SpendBudget("March", 2, 2024, "Bills", 50000.0),
+        SpendBudget("March", 2, 2024, "Food", 70000.0),
+        SpendBudget("March", 2, 2024, "Entertainment", 30000.0),
+        SpendBudget("March", 3, 2024, "Entertainment", 100.0),
+        // Add more sample spend budgets as needed
+    )
 }
 
 @Composable
@@ -164,4 +256,16 @@ fun getSampleBudgets(): List<Budget> {
 @Composable
 fun PreviewBudgetsScreen() {
     BudgetsScreen()
+}
+
+@Preview
+@Composable
+fun PreviewCurrentSpendBudgetTab() {
+    CurrentSpendBudgetTab()
+}
+
+@Preview
+@Composable
+fun PreviewPreviousSpendBudgetsTab() {
+    PreviousSpendBudgetsTab()
 }
