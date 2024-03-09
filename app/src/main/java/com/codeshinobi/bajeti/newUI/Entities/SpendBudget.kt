@@ -1,9 +1,17 @@
 package com.codeshinobi.bajeti.newUI.Entities
 
+import androidx.annotation.NonNull
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+@Entity
 data class SpendBudget(
-    val amount: Double,
-    val spendCategory: String,
-    val monthName: String,
-    val monthNumber: Int,
-    val year: Int
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    val id: Int = 0,
+    @ColumnInfo(name = "amount")val amount: Double,
+    @ColumnInfo(name = "spend_category")val spendCategory: String,
+    @ColumnInfo(name = "month_name")val monthName: String,
+    @ColumnInfo(name = "month_number")val monthNumber: Int,
+    @ColumnInfo(name = "year")val year: Int
 )
