@@ -8,9 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,6 +42,7 @@ import com.codeshinobi.bajeti.ui.theme.BajetiTheme
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -114,7 +118,10 @@ fun ExpensesScreenTabScreen() {
 }
 @Composable
 fun CurrentMonthExpensesTab() {
-    Text("Current Month Expenses")
+    Column {
+        Text("Current Month Expenses")
+        ExpenseListScreen()
+    }
 }
 @Composable
 fun AllExpensesTab() {
@@ -209,6 +216,69 @@ fun AddExpenseForm() {
         }
     }
 }
+@Composable
+fun ExpenseListScreen() {
+    var searchText by remember { mutableStateOf("") }
+
+    // Replace this with your actual data fetching logic or use sample data
+    val expenses = getSampleExpenses()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        // Search Bar
+        OutlinedTextField(
+            value = searchText,
+            onValueChange = { searchText = it },
+            label = { Text("Search Expenses") },
+            leadingIcon = { Icon(imageVector = Icons.Default.Search, contentDescription = null) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
+        )
+
+        // List of Expenses
+        LazyColumn {
+            items(expenses.filter { it.name.contains(searchText, ignoreCase = true) }) { expense ->
+                ExpenseListItem(expense = expense)
+            }
+        }
+    }
+}
+
+@Composable
+fun ExpenseListItem(expense: Expense) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+        ) {
+            Text(text = expense.name, style = MaterialTheme.typography.bodySmall)
+            Text(text = "Amount: ${expense.amount}", style = MaterialTheme.typography.bodyLarge)
+            Text(text = "Category: ${expense.category}", style = MaterialTheme.typography.bodyLarge)
+            Text(
+                text = "Date: ${SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(expense.date)}",
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
+    }
+}
+
+// Helper function to generate sample expenses
+fun getSampleExpenses(): List<Expense> {
+    return listOf(
+        Expense("Groceries", 50.0, "Food", Date()),
+        Expense("Clothing", 30.0, "Shopping", Date()),
+        Expense("Utilities", 80.0, "Bills", Date()),
+        // Add more sample expenses as needed
+    )
+}
 @Preview
 @Composable
 fun ExpensesScreenPreview() {
@@ -216,3 +286,5 @@ fun ExpensesScreenPreview() {
         ExpensesScreen()
     }
 }
+
+data class Expense(val name: String, val amount: Double, val category: String, val date: Date)
