@@ -21,4 +21,6 @@ interface ExpenseDao {
     fun getExpenseById(expenseId: Int): LiveData<Expense>
     @Query("SELECT * FROM expense WHERE month = :month AND year = :year")
     fun getExpensesForMonth(month: String, year: Int): LiveData<List<Expense>>
+    @Query("SELECT SUM(amount) FROM expense WHERE month = :month AND year = :year")
+    fun getTotalExpenseForMonth(month: String, year: Int): LiveData<Double?>
 }
