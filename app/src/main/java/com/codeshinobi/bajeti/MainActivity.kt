@@ -1,5 +1,6 @@
 package com.codeshinobi.bajeti
 
+import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,16 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.List
-import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material.icons.twotone.Email
 import androidx.compose.material3.Badge
@@ -38,7 +33,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -47,6 +47,7 @@ import com.codeshinobi.bajeti.newUI.BudgetsScreen
 import com.codeshinobi.bajeti.newUI.ExpensesScreen
 import com.codeshinobi.bajeti.newUI.HomeSummary
 import com.codeshinobi.bajeti.newUI.ReportsScreen
+import com.codeshinobi.bajeti.newUI.ViewModels.BudgetViewModel
 import com.codeshinobi.bajeti.ui.theme.BajetiTheme
 
 data class TabBarItem(
@@ -76,26 +77,34 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Scaffold(bottomBar = { TabView(tabBarItems, navController) }) {
-                        NavHost(navController = navController, startDestination = homeTab.title, modifier = Modifier.padding(it)) {
-                            composable(homeTab.title) {
-//                                Text(homeTab.title)
-                                HomeSummary()
-                            }
-                            composable(expensesTab.title) {
-//                                Text(expensesTab.title)
-                                ExpensesScreen()
-                            }
-                            composable(budgetsTab.title) {
-//                                Text(budgetsTab.title)
-                                BudgetsScreen()
-                            }
-                            composable(reportsTab.title) {
-//                                MoreView()
-                                ReportsScreen()
+                    val owner = LocalViewModelStoreOwner.current
+                    owner?.let {
+                        val viewModel: BudgetViewModel = viewModel(
+                            it,
+                            "BudgetViewModel",
+                            BudgetViewModelFactory(
+                                LocalContext.current.applicationContext
+                                        as Application
+                            )
+                        )
+                        Scaffold(bottomBar = { TabView(tabBarItems, navController) }) {
+                            NavHost(navController = navController, startDestination = homeTab.title, modifier = Modifier.padding(it)) {
+                                composable(homeTab.title) {
+                                    HomeSummary(viewModel)
+                                }
+                                composable(expensesTab.title) {
+                                    ExpensesScreen()
+                                }
+                                composable(budgetsTab.title) {
+                                    BudgetsScreen()
+                                }
+                                composable(reportsTab.title) {
+                                    ReportsScreen()
+                                }
                             }
                         }
                     }
+
                 }
             }
         }
@@ -191,5 +200,12 @@ fun Greeting8(name: String, modifier: Modifier = Modifier) {
 fun GreetingPreview() {
     BajetiTheme {
         Greeting8("Android")
+    }
+}
+
+class BudgetViewModelFactory(val application: Application):
+    ViewModelProvider.Factory {
+    override fun<T: ViewModel> create(modelClass: Class<T>): T {
+        return BudgetViewModel(application) as T
     }
 }

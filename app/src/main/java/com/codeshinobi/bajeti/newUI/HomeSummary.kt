@@ -28,7 +28,7 @@ import com.codeshinobi.bajeti.newUI.ViewModels.BudgetViewModel
 import com.codeshinobi.bajeti.newUI.ViewModels.ExpenseViewModel
 
 @Composable
-fun HomeSummary() {
+fun HomeSummary(viewModel: BudgetViewModel) {
 //    Text(text = "Summary")
     Column(
         modifier = Modifier
@@ -145,8 +145,8 @@ fun ExpenseCard(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun HomeSummaryPreview() {
-    HomeSummary()
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun HomeSummaryPreview() {
+//    HomeSummary(viewModel)
+//}
