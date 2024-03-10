@@ -95,9 +95,6 @@ dependencies {
     implementation("androidx.navigation:navigation-compose")
     implementation("androidx.sqlite:sqlite-ktx:2.4.0")
 
-//    implementation("androidx.room:room-runtime:2.6.0")
-//    annotationProcessor("androidx.room:room-compiler:2.6.0")
-
     implementation "androidx.room:room-runtime:2.6.0"
     implementation "androidx.room:room-ktx:2.6.0"
     implementation "androidx.compose.runtime:runtime-livedata:1.5.4"

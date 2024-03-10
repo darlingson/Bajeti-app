@@ -10,7 +10,7 @@ data class Expense(
     @PrimaryKey(autoGenerate = true)
     @NonNull
     val id: Int = 0,
-    @ColumnInfo(name = "date")val date: Date,
+    @ColumnInfo(name = "date")val date: String,
     @ColumnInfo(name = "name")val name: String,
     @ColumnInfo(name = "amount")val amount: Double,
     @ColumnInfo(name = "description")val description: String,

@@ -27,14 +27,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-data class Budget(val amount: Double, val monthName: String, val monthNumber: Int, val year: Int)
-data class SpendBudget(
-    val monthName: String,
-    val monthNumber: Int,
-    val year: Int,
-    val category: String,
-    val amount: Double
-)
+
 
 @Composable
 fun BudgetsScreen() {
@@ -141,7 +134,7 @@ fun CurrentSpendBudgetTab() {
 }
 
 @Composable
-fun SpendBudgetListItem(spendBudget: SpendBudget) {
+fun SpendBudgetListItem(spendBudget: PlaceHolderSpendBudget) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -167,16 +160,16 @@ fun SpendBudgetListItem(spendBudget: SpendBudget) {
     }
 }
 
-fun getSampleSpendBudgets(): List<SpendBudget> {
+fun getSampleSpendBudgets(): List<PlaceHolderSpendBudget> {
     return listOf(
-        SpendBudget("January", 0, 2022, "Food", 300.0),
-        SpendBudget("January", 0, 2022, "Shopping", 150.0),
-        SpendBudget("March", 2, 2024, "Bills", 200.0),
-        SpendBudget("March", 2, 2024, "Utilities", 30000.0),
-        SpendBudget("March", 2, 2024, "Bills", 50000.0),
-        SpendBudget("March", 2, 2024, "Food", 70000.0),
-        SpendBudget("March", 2, 2024, "Entertainment", 30000.0),
-        SpendBudget("March", 3, 2024, "Entertainment", 100.0),
+        PlaceHolderSpendBudget("January", 0, 2022, "Food", 300.0),
+        PlaceHolderSpendBudget("January", 0, 2022, "Shopping", 150.0),
+        PlaceHolderSpendBudget("March", 2, 2024, "Bills", 200.0),
+        PlaceHolderSpendBudget("March", 2, 2024, "Utilities", 30000.0),
+        PlaceHolderSpendBudget("March", 2, 2024, "Bills", 50000.0),
+        PlaceHolderSpendBudget("March", 2, 2024, "Food", 70000.0),
+        PlaceHolderSpendBudget("March", 2, 2024, "Entertainment", 30000.0),
+        PlaceHolderSpendBudget("March", 3, 2024, "Entertainment", 100.0),
         // Add more sample spend budgets as needed
     )
 }
@@ -209,7 +202,7 @@ fun MonthlyBudgetsTab() {
             val currentYear = Calendar.getInstance().get(Calendar.YEAR)
             item {
                 BudgetListItem(
-                    Budget(
+                    PlaceholderBudget(
                         1000.0,
                         SimpleDateFormat(
                             "MMMM",
@@ -235,7 +228,7 @@ fun MonthlyBudgetsTab() {
 }
 
 @Composable
-fun BudgetListItem(budget: Budget) {
+fun BudgetListItem(budget: PlaceholderBudget) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -252,23 +245,23 @@ fun BudgetListItem(budget: Budget) {
     }
 }
 
-fun getSampleBudgets(): List<Budget> {
+fun getSampleBudgets(): List<PlaceholderBudget> {
     return listOf(
-        Budget(1000.0, "January", 0, 2023),
-        Budget(2000.0, "February", 1, 2023),
-        Budget(3000.0, "March", 2, 2023),
-        Budget(4000.0, "April", 3, 2023),
-        Budget(5000.0, "May", 4, 2023),
-        Budget(6000.0, "June", 5, 2023),
-        Budget(7000.0, "July", 6, 2023),
-        Budget(8000.0, "August", 7, 2023),
-        Budget(9000.0, "September", 8, 2023),
-        Budget(10000.0, "October", 9, 2023),
-        Budget(11000.0, "November", 10, 2023),
-        Budget(12000.0, "December", 11, 2023),
-        Budget(12000.0, "January", 0, 2024),
-        Budget(12000.0, "February", 1, 2024),
-        Budget(12000.0, "March", 2, 2024),
+        PlaceholderBudget(1000.0, "January", 0, 2023),
+        PlaceholderBudget(2000.0, "February", 1, 2023),
+        PlaceholderBudget(3000.0, "March", 2, 2023),
+        PlaceholderBudget(4000.0, "April", 3, 2023),
+        PlaceholderBudget(5000.0, "May", 4, 2023),
+        PlaceholderBudget(6000.0, "June", 5, 2023),
+        PlaceholderBudget(7000.0, "July", 6, 2023),
+        PlaceholderBudget(8000.0, "August", 7, 2023),
+        PlaceholderBudget(9000.0, "September", 8, 2023),
+        PlaceholderBudget(10000.0, "October", 9, 2023),
+        PlaceholderBudget(11000.0, "November", 10, 2023),
+        PlaceholderBudget(12000.0, "December", 11, 2023),
+        PlaceholderBudget(12000.0, "January", 0, 2024),
+        PlaceholderBudget(12000.0, "February", 1, 2024),
+        PlaceholderBudget(12000.0, "March", 2, 2024),
     )
 }
 
@@ -289,3 +282,13 @@ fun PreviewCurrentSpendBudgetTab() {
 fun PreviewPreviousSpendBudgetsTab() {
     PreviousSpendBudgetsTab()
 }
+
+
+data class PlaceholderBudget(val amount: Double, val monthName: String, val monthNumber: Int, val year: Int)
+data class PlaceHolderSpendBudget(
+    val monthName: String,
+    val monthNumber: Int,
+    val year: Int,
+    val category: String,
+    val amount: Double
+)

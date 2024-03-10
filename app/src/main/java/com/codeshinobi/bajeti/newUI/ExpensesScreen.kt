@@ -1,13 +1,11 @@
 package com.codeshinobi.bajeti.newUI
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
@@ -249,7 +247,7 @@ fun ExpenseListScreen() {
 }
 
 @Composable
-fun ExpenseListItem(expense: Expense) {
+fun ExpenseListItem(expense: PlaceHolderExpense) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -271,11 +269,11 @@ fun ExpenseListItem(expense: Expense) {
 }
 
 // Helper function to generate sample expenses
-fun getSampleExpenses(): List<Expense> {
+fun getSampleExpenses(): List<PlaceHolderExpense> {
     return listOf(
-        Expense("Groceries", 50.0, "Food", Date()),
-        Expense("Clothing", 30.0, "Shopping", Date()),
-        Expense("Utilities", 80.0, "Bills", Date()),
+        PlaceHolderExpense("Groceries", 50.0, "Food", Date()),
+        PlaceHolderExpense("Clothing", 30.0, "Shopping", Date()),
+        PlaceHolderExpense("Utilities", 80.0, "Bills", Date()),
         // Add more sample expenses as needed
     )
 }
@@ -287,4 +285,4 @@ fun ExpensesScreenPreview() {
     }
 }
 
-data class Expense(val name: String, val amount: Double, val category: String, val date: Date)
+data class PlaceHolderExpense(val name: String, val amount: Double, val category: String, val date: Date)

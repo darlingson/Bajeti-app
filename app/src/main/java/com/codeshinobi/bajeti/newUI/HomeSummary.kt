@@ -15,12 +15,17 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.codeshinobi.bajeti.newUI.ViewModels.BudgetViewModel
+import com.codeshinobi.bajeti.newUI.ViewModels.ExpenseViewModel
 
 @Composable
 fun HomeSummary() {
@@ -40,9 +45,15 @@ fun HomeSummary() {
 
 @Composable
 fun SummaryBudgetCard() {
-    var budget: Double = 100000.0
-    var currentSpend: Double = 80000.0
-    val spendPercentage = (currentSpend / budget) * 100
+    val budgetViewModel: BudgetViewModel = viewModel()
+    val expenseViewModel: ExpenseViewModel = viewModel()
+
+    val budget by budgetViewModel.allBudgets.observeAsState(initial = emptyList())
+    val expenses by expenseViewModel.allExpenses.observeAsState(initial = emptyList())
+
+    val totalBudget = budget.sumOf { it.amount }
+    val totalExpenses = expenses.sumOf { it.amount }
+    val spendPercentage = (totalExpenses / totalBudget) * 100
     val backgroundColor = when {
         spendPercentage < 70 -> Color.Green
         spendPercentage in 71.0..99.0 -> Color.Magenta
@@ -61,12 +72,12 @@ fun SummaryBudgetCard() {
                 .padding(16.dp)
         ) {
             Text(
-                text = "Budget : K${budget.toInt()}",
+                text = "Budget : K${totalBudget.toInt()}",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "Current Spend : K${currentSpend.toInt()}",
+                text = "Current Spend : K${totalExpenses.toInt()}",
                 color = backgroundColor,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold

@@ -10,7 +10,7 @@ data class Budget(
     @NonNull
     val id: Int = 0,
     @ColumnInfo(name = "amount")val amount: Double,
-    @ColumnInfo(name = "month_name")val monthName: String,
-    @ColumnInfo(name = "month_number")val monthNumber: Int,
+    @ColumnInfo(name = "month_name")val month_name: String,
+    @ColumnInfo(name = "month_number")val month_number: Int,
     @ColumnInfo(name = "year")val year: Int
 )
