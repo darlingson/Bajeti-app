@@ -1,5 +1,7 @@
 package com.codeshinobi.bajeti.newUI
 
+import android.app.DatePickerDialog
+import android.widget.DatePicker
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -35,14 +38,19 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.codeshinobi.bajeti.newUI.Entities.Expense
 import com.codeshinobi.bajeti.newUI.ViewModels.BudgetViewModel
 import com.codeshinobi.bajeti.ui.theme.BajetiTheme
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -142,6 +150,7 @@ fun SearchExpenses() {
 @Composable
 fun AddExpenseForm(viewModel: BudgetViewModel) {
     //getting today's date incase the expense was incurred today
+    var expenseDatefroPicker by remember { mutableStateOf(Calendar.getInstance()) }
     val sdf = SimpleDateFormat("dd-MM-yyyy")
     val todayDate = sdf.format(Date())
 
@@ -151,6 +160,21 @@ fun AddExpenseForm(viewModel: BudgetViewModel) {
     var expenseAmount by remember { mutableStateOf("") }
     var expenseCategory by remember { mutableStateOf("") }
 
+    val mContext = LocalContext.current
+    val mYear: Int
+    val mMonth: Int
+    val mDay: Int
+    val mCalendar = Calendar.getInstance()
+    mYear = mCalendar.get(Calendar.YEAR)
+    mMonth = mCalendar.get(Calendar.MONTH)
+    mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
+    val mDate = remember { mutableStateOf("") }
+    val mDatePickerDialog = DatePickerDialog(
+        mContext,
+        { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
+            mDate.value = "$mDayOfMonth/${mMonth+1}/$mYear"
+        }, mYear, mMonth, mDay
+    )
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -162,7 +186,18 @@ fun AddExpenseForm(viewModel: BudgetViewModel) {
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            // Expense Date
+            Row(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(text = "${mDate.value}", fontSize = 30.sp, textAlign = TextAlign.Center)
+                Button(onClick = {
+                    mDatePickerDialog.show()
+                }, colors = ButtonDefaults.buttonColors(containerColor = Color(0XFF0F9D58)) ) {
+                    Text(text = "Open Date Picker", color = Color.White)
+                }
+            }
             OutlinedTextField(
                 value = expenseDate,
                 onValueChange = { expenseDate = it },
@@ -171,7 +206,6 @@ fun AddExpenseForm(viewModel: BudgetViewModel) {
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
             )
-            // Expense Name
             OutlinedTextField(
                 value = expenseName,
                 onValueChange = { expenseName = it },
@@ -180,7 +214,6 @@ fun AddExpenseForm(viewModel: BudgetViewModel) {
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
             )
-            // Expense Quantity
             OutlinedTextField(
                 value = expenseQuantity.toString(),
                 onValueChange = { expenseQuantity = it.toInt() },
@@ -190,7 +223,6 @@ fun AddExpenseForm(viewModel: BudgetViewModel) {
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
             )
-            // Expense Amount
             OutlinedTextField(
                 value = expenseAmount,
                 onValueChange = { expenseAmount = it },
@@ -200,7 +232,6 @@ fun AddExpenseForm(viewModel: BudgetViewModel) {
                     .padding(bottom = 8.dp)
             )
 
-            // Expense Category
             OutlinedTextField(
                 value = expenseCategory,
                 onValueChange = { expenseCategory = it },
@@ -210,7 +241,6 @@ fun AddExpenseForm(viewModel: BudgetViewModel) {
                     .padding(bottom = 16.dp)
             )
 
-            // Button to Add Expense (You can replace this with your desired action)
             Button(
                 onClick = {
                     viewModel.insert(
