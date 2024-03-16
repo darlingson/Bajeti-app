@@ -1,40 +1,54 @@
 package com.codeshinobi.bajeti.newUI
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.codeshinobi.bajeti.newUI.ViewModels.BudgetViewModel
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
 
 @Composable
-fun BudgetsScreen() {
-    BudgetsScreenTabScreen()
+fun BudgetsScreen(viewModel: BudgetViewModel) {
+    BudgetsScreenTabScreen(viewModel)
 }
 
 @Composable
-fun BudgetsScreenTabScreen() {
+fun BudgetsScreenTabScreen(viewModel: BudgetViewModel) {
     var tabIndex by remember { mutableStateOf(0) }
 
     val tabs = listOf("Total Budgets", "Current Spend Budget", "Previous Spend Budgets")
@@ -49,15 +63,15 @@ fun BudgetsScreenTabScreen() {
             }
         }
         when (tabIndex) {
-            0 -> MonthlyBudgetsTab()
-            1 -> CurrentSpendBudgetTab()
-            2 -> PreviousSpendBudgetsTab()
+            0 -> MonthlyBudgetsTab(viewModel)
+            1 -> CurrentSpendBudgetTab(viewModel)
+            2 -> PreviousSpendBudgetsTab(viewModel)
         }
     }
 }
 
 @Composable
-fun PreviousSpendBudgetsTab() {
+fun PreviousSpendBudgetsTab(viewModel: BudgetViewModel) {
     var searchText by remember { mutableStateOf("") }
 
     val spendBudgets = getSampleSpendBudgets()
@@ -94,39 +108,94 @@ fun PreviousSpendBudgetsTab() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CurrentSpendBudgetTab() {
+fun CurrentSpendBudgetTab(viewModel: BudgetViewModel) {
     var searchText by remember { mutableStateOf("") }
-
+    var isModalOpen by remember { mutableStateOf(false) }
+    var showBottomSheet by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState()
     val spendBudgets = getSampleSpendBudgets()
+    val scope = rememberCoroutineScope()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { showBottomSheet = true },
+                modifier = Modifier
+                    .padding(top = 16.dp)
+            ) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
+            }
+        }
     ) {
-        // Search Bar
-        OutlinedTextField(
-            value = searchText,
-            onValueChange = { searchText = it },
-            label = { Text("Search Spend Budgets") },
-            leadingIcon = { Icon(imageVector = Icons.Default.Search, contentDescription = null) },
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
-        )
+                .fillMaxSize()
+                .padding(it)
+        ) {
+            // Search Bar
+            OutlinedTextField(
+                value = searchText,
+                onValueChange = { searchText = it },
+                label = { Text("Search Spend Budgets") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = null
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            )
 
-        // List of Spend Budgets
-        LazyColumn {
-            val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
-            val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-            items(spendBudgets.filter {
-                it.monthNumber == currentMonth && it.year == currentYear && it.category.contains(
-                    searchText,
-                    ignoreCase = true
-                )
-            }) { spendBudget ->
-                SpendBudgetListItem(spendBudget = spendBudget)
+            // List of Spend Budgets
+            LazyColumn {
+                val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
+                val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+                items(spendBudgets.filter {
+                    it.monthNumber == currentMonth && it.year == currentYear && it.category.contains(
+                        searchText,
+                        ignoreCase = true
+                    )
+                }) { spendBudget ->
+                    SpendBudgetListItem(spendBudget = spendBudget)
+                }
+            }
+            if (showBottomSheet) {
+                ModalBottomSheet(
+                    onDismissRequest = {
+                        showBottomSheet = false
+                    },
+                    sheetState = sheetState
+                ) {
+                    // Sheet content
+                    Column(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .fillMaxWidth()
+                            .padding(it)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ){
+                            Text("Add expense")
+                        }
+                        AddExpenseForm(viewModel)
+                        Button(onClick = {
+                            scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                if (!sheetState.isVisible) {
+                                    showBottomSheet = false
+                                }
+                            }
+                        }) {
+                            Text("Close")
+                        }
+                    }
+                }
             }
         }
     }
@@ -174,7 +243,7 @@ fun getSampleSpendBudgets(): List<PlaceHolderSpendBudget> {
 }
 
 @Composable
-fun MonthlyBudgetsTab() {
+fun MonthlyBudgetsTab(viewModel: BudgetViewModel) {
     var searchText by remember { mutableStateOf("") }
 
     val budgets = getSampleBudgets()
@@ -225,7 +294,16 @@ fun MonthlyBudgetsTab() {
         }
     }
 }
+@Composable
+fun AddSpendBudgetForm(){
 
+}
+
+@Preview
+@Composable
+fun AddSpendBudgetPreview() {
+    AddSpendBudgetForm()
+}
 @Composable
 fun BudgetListItem(budget: PlaceholderBudget) {
     Card(
@@ -264,23 +342,23 @@ fun getSampleBudgets(): List<PlaceholderBudget> {
     )
 }
 
-@Preview
-@Composable
-fun PreviewBudgetsScreen() {
-    BudgetsScreen()
-}
-
-@Preview
-@Composable
-fun PreviewCurrentSpendBudgetTab() {
-    CurrentSpendBudgetTab()
-}
-
-@Preview
-@Composable
-fun PreviewPreviousSpendBudgetsTab() {
-    PreviousSpendBudgetsTab()
-}
+//@Preview
+//@Composable
+//fun PreviewBudgetsScreen() {
+//    BudgetsScreen(viewModel)
+//}
+//
+//@Preview
+//@Composable
+//fun PreviewCurrentSpendBudgetTab() {
+//    CurrentSpendBudgetTab(viewModel)
+//}
+//
+//@Preview
+//@Composable
+//fun PreviewPreviousSpendBudgetsTab() {
+//    PreviousSpendBudgetsTab(viewModel)
+//}
 
 
 data class PlaceholderBudget(
