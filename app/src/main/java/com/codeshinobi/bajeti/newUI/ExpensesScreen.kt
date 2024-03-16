@@ -1,6 +1,8 @@
 package com.codeshinobi.bajeti.newUI
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,6 +38,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.codeshinobi.bajeti.newUI.Entities.Expense
+import com.codeshinobi.bajeti.newUI.ViewModels.BudgetViewModel
 import com.codeshinobi.bajeti.ui.theme.BajetiTheme
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -44,7 +48,7 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExpensesScreen() {
+fun ExpensesScreen(viewModel: BudgetViewModel) {
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -76,8 +80,14 @@ fun ExpensesScreen() {
                         .fillMaxWidth()
                         .padding(contentPadding)
                 ) {
-                    Text("Add expense")
-                    AddExpenseForm()
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ){
+                        Text("Add expense")
+                    }
+                    AddExpenseForm(viewModel)
                     Button(onClick = {
                         scope.launch { sheetState.hide() }.invokeOnCompletion {
                             if (!sheetState.isVisible) {
@@ -130,7 +140,7 @@ fun SearchExpenses() {
     Text("Search Expenses")
 }
 @Composable
-fun AddExpenseForm() {
+fun AddExpenseForm(viewModel: BudgetViewModel) {
     //getting today's date incase the expense was incurred today
     val sdf = SimpleDateFormat("dd-MM-yyyy")
     val todayDate = sdf.format(Date())
@@ -203,11 +213,22 @@ fun AddExpenseForm() {
             // Button to Add Expense (You can replace this with your desired action)
             Button(
                 onClick = {
-                    // Add expense logic goes here
-                    // For example, you can send data to a ViewModel or perform some action
-                    // based on the entered expense details.
+                    viewModel.insert(
+                        Expense(
+                            name = expenseName,
+                            quantity = expenseQuantity.toFloat(),
+                            amount = expenseAmount.toDouble(),
+                            category = expenseCategory,
+                            date = expenseDate,
+                            description = "",
+                            monthNumber = 1,
+                            weekNumber = 1,
+                            year = 2023,
+                            month = "January",
+                        )
+                    )
                 },
-                modifier = Modifier.align(Alignment.End)
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
                 Text("Add Expense")
             }
@@ -281,8 +302,16 @@ fun getSampleExpenses(): List<PlaceHolderExpense> {
 @Composable
 fun ExpensesScreenPreview() {
     BajetiTheme {
-        ExpensesScreen()
+//        ExpensesScreen()
+        ExpensesScreenTabScreen()
     }
 }
-
+//@Preview
+//@Composable
+//fun AddExpenseFormPreview() {
+//    BajetiTheme {
+//        AddExpenseForm(viewModel)
+//    }
+//
+//}
 data class PlaceHolderExpense(val name: String, val amount: Double, val category: String, val date: Date)

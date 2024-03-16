@@ -115,7 +115,7 @@ class MainActivity : ComponentActivity() {
                                     HomeSummary(viewModel)
                                 }
                                 composable(expensesTab.title) {
-                                    ExpensesScreen()
+                                    ExpensesScreen(viewModel)
                                 }
                                 composable(budgetsTab.title) {
                                     BudgetsScreen()
