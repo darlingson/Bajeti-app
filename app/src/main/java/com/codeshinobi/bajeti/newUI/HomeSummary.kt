@@ -40,7 +40,7 @@ fun HomeSummary(viewModel: BudgetViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-//            .verticalScroll(rememberScrollState())
+//            .verticalScroll(rememberScrol lState())
     ) {
         SummaryBudgetCard(viewModel)
         Divider(
