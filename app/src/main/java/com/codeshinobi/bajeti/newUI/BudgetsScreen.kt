@@ -28,7 +28,6 @@ import java.util.Calendar
 import java.util.Locale
 
 
-
 @Composable
 fun BudgetsScreen() {
     BudgetsScreenTabScreen()
@@ -284,7 +283,13 @@ fun PreviewPreviousSpendBudgetsTab() {
 }
 
 
-data class PlaceholderBudget(val amount: Double, val monthName: String, val monthNumber: Int, val year: Int)
+data class PlaceholderBudget(
+    val amount: Double,
+    val monthName: String,
+    val monthNumber: Int,
+    val year: Int
+)
+
 data class PlaceHolderSpendBudget(
     val monthName: String,
     val monthNumber: Int,
