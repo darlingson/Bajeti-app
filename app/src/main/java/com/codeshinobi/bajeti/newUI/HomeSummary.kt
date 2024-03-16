@@ -35,7 +35,7 @@ fun HomeSummary(viewModel: BudgetViewModel) {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        SummaryBudgetCard()
+        SummaryBudgetCard(viewModel)
         Divider(
             modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
         )
@@ -44,8 +44,8 @@ fun HomeSummary(viewModel: BudgetViewModel) {
 }
 
 @Composable
-fun SummaryBudgetCard() {
-    val budgetViewModel: BudgetViewModel = viewModel()
+fun SummaryBudgetCard(budgetVM: BudgetViewModel) {
+    val budgetViewModel: BudgetViewModel =  budgetVM /*viewModel()*/
     val expenseViewModel: ExpenseViewModel = viewModel()
 
     val budget by budgetViewModel.allBudgets.observeAsState(initial = emptyList())

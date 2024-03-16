@@ -16,7 +16,7 @@ class BudgetViewModel(application:Application) : ViewModel() {
 
     init {
         val db = Expenses_App_DB.getDatabase(application)
-        val BudgetDao = db?.budgetDao
+        val BudgetDao = db.budgetDao
         repository = BudgetDao?.let { BudgetRepository(it) }!!
     }
 
