@@ -33,6 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -42,10 +43,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.codeshinobi.bajeti.newUI.Entities.Expense
 import com.codeshinobi.bajeti.newUI.ViewModels.BudgetViewModel
 import com.codeshinobi.bajeti.ui.theme.BajetiTheme
@@ -54,7 +53,6 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import kotlin.math.log
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,7 +72,7 @@ fun ExpensesScreen(viewModel: BudgetViewModel) {
         }
     ) { contentPadding ->
         // Screen content
-        ExpensesScreenTabScreen()
+        ExpensesScreenTabScreen(viewModel)
 
         if (showBottomSheet) {
             ModalBottomSheet(
@@ -113,7 +111,7 @@ fun ExpensesScreen(viewModel: BudgetViewModel) {
     }
 }
 @Composable
-fun ExpensesScreenTabScreen() {
+fun ExpensesScreenTabScreen(viewModel: BudgetViewModel) {
     var tabIndex by remember { mutableStateOf(0) }
 
     val tabs = listOf("Current", "All", "Search")
@@ -128,25 +126,25 @@ fun ExpensesScreenTabScreen() {
             }
         }
         when (tabIndex) {
-            0 -> CurrentMonthExpensesTab()
-            1 -> AllExpensesTab()
-            2 -> SearchExpenses()
+            0 -> CurrentMonthExpensesTab(viewModel)
+            1 -> AllExpensesTab(viewModel)
+            2 -> SearchExpenses(viewModel)
         }
     }
 }
 @Composable
-fun CurrentMonthExpensesTab() {
+fun CurrentMonthExpensesTab(viewModel: BudgetViewModel) {
     Column {
         Text("Current Month Expenses")
-        ExpenseListScreen()
+        ExpenseListScreen(viewModel)
     }
 }
 @Composable
-fun AllExpensesTab() {
+fun AllExpensesTab(viewModel: BudgetViewModel) {
     Text("All Expenses")
 }
 @Composable
-fun SearchExpenses() {
+fun SearchExpenses(viewModel: BudgetViewModel) {
     Text("Search Expenses")
 }
 @Composable
@@ -303,12 +301,11 @@ fun AddExpenseForm(viewModel: BudgetViewModel) {
     }
 }
 @Composable
-fun ExpenseListScreen() {
+fun ExpenseListScreen(viewModel: BudgetViewModel) {
     var searchText by remember { mutableStateOf("") }
 
-    // Replace this with your actual data fetching logic or use sample data
-    val expenses = getSampleExpenses()
-
+//    val expenses = getSampleExpenses()
+    val expenses by viewModel.allExpenses.observeAsState(emptyList())
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -335,7 +332,7 @@ fun ExpenseListScreen() {
 }
 
 @Composable
-fun ExpenseListItem(expense: PlaceHolderExpense) {
+fun ExpenseListItem(expense: Expense) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -365,14 +362,14 @@ fun getSampleExpenses(): List<PlaceHolderExpense> {
         // Add more sample expenses as needed
     )
 }
-@Preview
-@Composable
-fun ExpensesScreenPreview() {
-    BajetiTheme {
-//        ExpensesScreen()
-        ExpensesScreenTabScreen()
-    }
-}
+//@Preview
+//@Composable
+//fun ExpensesScreenPreview() {
+//    BajetiTheme {
+////        ExpensesScreen()
+//        ExpensesScreenTabScreen(viewModel)
+//    }
+//}
 //@Preview
 //@Composable
 //fun AddExpenseFormPreview() {
