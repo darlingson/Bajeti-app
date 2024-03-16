@@ -56,15 +56,33 @@ data class TabBarItem(
     val unselectedIcon: ImageVector,
     val badgeAmount: Int? = null
 )
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             // setting up the individual tabs
-            val homeTab = TabBarItem(title = "Home", selectedIcon = Icons.Filled.Home, unselectedIcon = Icons.Outlined.Home)
-            val expensesTab = TabBarItem(title = "Expenses", selectedIcon = Icons.Filled.ShoppingCart, unselectedIcon = Icons.Outlined.ShoppingCart, badgeAmount = 7)
-            val budgetsTab = TabBarItem(title = "Budgets", selectedIcon = Icons.Filled.DateRange, unselectedIcon = Icons.Outlined.DateRange)
-            val reportsTab = TabBarItem(title = "Reports", selectedIcon = Icons.TwoTone.Email, unselectedIcon = Icons.Outlined.Email)
+            val homeTab = TabBarItem(
+                title = "Home",
+                selectedIcon = Icons.Filled.Home,
+                unselectedIcon = Icons.Outlined.Home
+            )
+            val expensesTab = TabBarItem(
+                title = "Expenses",
+                selectedIcon = Icons.Filled.ShoppingCart,
+                unselectedIcon = Icons.Outlined.ShoppingCart,
+                badgeAmount = 7
+            )
+            val budgetsTab = TabBarItem(
+                title = "Budgets",
+                selectedIcon = Icons.Filled.DateRange,
+                unselectedIcon = Icons.Outlined.DateRange
+            )
+            val reportsTab = TabBarItem(
+                title = "Reports",
+                selectedIcon = Icons.TwoTone.Email,
+                unselectedIcon = Icons.Outlined.Email
+            )
 
             // creating a list of all the tabs
             val tabBarItems = listOf(homeTab, expensesTab, budgetsTab, reportsTab)
@@ -88,7 +106,11 @@ class MainActivity : ComponentActivity() {
                             )
                         )
                         Scaffold(bottomBar = { TabView(tabBarItems, navController) }) {
-                            NavHost(navController = navController, startDestination = homeTab.title, modifier = Modifier.padding(it)) {
+                            NavHost(
+                                navController = navController,
+                                startDestination = homeTab.title,
+                                modifier = Modifier.padding(it)
+                            ) {
                                 composable(homeTab.title) {
                                     HomeSummary(viewModel)
                                 }
@@ -110,6 +132,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 // ----------------------------------------
 // This is a wrapper view that allows us to easily and cleanly
 // reuse this component in any future project
@@ -137,10 +160,11 @@ fun TabView(tabBarItems: List<TabBarItem>, navController: NavController) {
                         badgeAmount = tabBarItem.badgeAmount
                     )
                 },
-                label = {Text(tabBarItem.title)})
+                label = { Text(tabBarItem.title) })
         }
     }
 }
+
 // This component helps to clean up the API call from our TabView above,
 // but could just as easily be added inside the TabView without creating this custom component
 @OptIn(ExperimentalMaterial3Api::class)
@@ -154,7 +178,11 @@ fun TabBarIconView(
 ) {
     BadgedBox(badge = { TabBarBadgeView(badgeAmount) }) {
         Icon(
-            imageVector = if (isSelected) {selectedIcon} else {unselectedIcon},
+            imageVector = if (isSelected) {
+                selectedIcon
+            } else {
+                unselectedIcon
+            },
             contentDescription = title
         )
     }
@@ -187,6 +215,7 @@ fun MoreView() {
         Text("Thing 5")
     }
 }
+
 @Composable
 fun Greeting8(name: String, modifier: Modifier = Modifier) {
     Text(
@@ -203,9 +232,9 @@ fun GreetingPreview() {
     }
 }
 
-class BudgetViewModelFactory(val application: Application):
+class BudgetViewModelFactory(val application: Application) :
     ViewModelProvider.Factory {
-    override fun<T: ViewModel> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return BudgetViewModel(application) as T
     }
 }
