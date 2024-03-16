@@ -1,6 +1,7 @@
 package com.codeshinobi.bajeti.newUI
 
 import android.app.DatePickerDialog
+import android.util.Log
 import android.widget.DatePicker
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -53,6 +54,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import kotlin.math.log
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -150,15 +152,17 @@ fun SearchExpenses() {
 @Composable
 fun AddExpenseForm(viewModel: BudgetViewModel) {
     //getting today's date incase the expense was incurred today
-    var expenseDatefroPicker by remember { mutableStateOf(Calendar.getInstance()) }
     val sdf = SimpleDateFormat("dd-MM-yyyy")
     val todayDate = sdf.format(Date())
 
     var expenseDate by remember { mutableStateOf(todayDate) }
     var expenseName by remember { mutableStateOf("") }
+    var expenseDescription by remember { mutableStateOf("") }
     var expenseQuantity by remember { mutableStateOf(1) }
     var expenseAmount by remember { mutableStateOf("") }
     var expenseCategory by remember { mutableStateOf("") }
+
+
 
     val mContext = LocalContext.current
     val mYear: Int
@@ -168,11 +172,36 @@ fun AddExpenseForm(viewModel: BudgetViewModel) {
     mYear = mCalendar.get(Calendar.YEAR)
     mMonth = mCalendar.get(Calendar.MONTH)
     mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
-    val mDate = remember { mutableStateOf("") }
+
+    var monthName = SimpleDateFormat("MMMM", Locale.getDefault()).format(mCalendar.time)
+    var monthNumber = mMonth + 1
+    var weekNumber = mCalendar.get(Calendar.WEEK_OF_YEAR)
+    var year = mYear
+
+    val mDate = remember { mutableStateOf(expenseDate) }
+
     val mDatePickerDialog = DatePickerDialog(
         mContext,
         { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-            mDate.value = "$mDayOfMonth/${mMonth+1}/$mYear"
+            val calendar = Calendar.getInstance().apply {
+                set(Calendar.YEAR, mYear)
+                set(Calendar.MONTH, mMonth)
+                set(Calendar.DAY_OF_MONTH, mDayOfMonth)
+            }
+
+            monthName = SimpleDateFormat("MMMM", Locale.getDefault()).format(calendar.time)
+            monthNumber = mMonth + 1
+            weekNumber = calendar.get(Calendar.WEEK_OF_YEAR)
+            year = mYear
+
+            mDate.value = "$mDayOfMonth/$monthNumber/$mYear"
+            expenseDate = "$mDayOfMonth/$monthNumber/$mYear"
+
+            Log.d("DatePicker", "Selected Date: $mDayOfMonth/$monthNumber/$mYear")
+            Log.d("DatePicker", "Month Name: $monthName")
+            Log.d("DatePicker", "Month Number: $monthNumber")
+            Log.d("DatePicker", "Week Number: $weekNumber")
+
         }, mYear, mMonth, mDay
     )
     Card(
@@ -191,25 +220,33 @@ fun AddExpenseForm(viewModel: BudgetViewModel) {
                     .padding(16.dp)
                     .fillMaxWidth()
             ) {
-                Text(text = "${mDate.value}", fontSize = 30.sp, textAlign = TextAlign.Center)
+                OutlinedTextField(
+                    readOnly = true,
+                    value = expenseDate,
+                    onValueChange = { expenseDate = it },
+                    label = { Text("Expense Date") },
+                    modifier = Modifier
+                        .weight(0.6f)
+                        .padding(bottom = 8.dp)
+                )
                 Button(onClick = {
                     mDatePickerDialog.show()
                 }, colors = ButtonDefaults.buttonColors(containerColor = Color(0XFF0F9D58)) ) {
-                    Text(text = "Open Date Picker", color = Color.White)
+                    Text(text = "Pick Date", color = Color.White)
                 }
             }
             OutlinedTextField(
-                value = expenseDate,
-                onValueChange = { expenseDate = it },
-                label = { Text("Expense Date") },
+                value = expenseName,
+                onValueChange = { expenseName = it },
+                label = { Text("Expense Name") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
             )
             OutlinedTextField(
-                value = expenseName,
-                onValueChange = { expenseName = it },
-                label = { Text("Expense Name") },
+                value =  expenseDescription,
+                onValueChange = { expenseDescription = it },
+                label = { Text("Expense Description") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
@@ -250,11 +287,11 @@ fun AddExpenseForm(viewModel: BudgetViewModel) {
                             amount = expenseAmount.toDouble(),
                             category = expenseCategory,
                             date = expenseDate,
-                            description = "",
-                            monthNumber = 1,
-                            weekNumber = 1,
-                            year = 2023,
-                            month = "January",
+                            description = expenseDescription,
+                            monthNumber = monthNumber,
+                            weekNumber = weekNumber,
+                            year = year,
+                            month = monthName,
                         )
                     )
                 },
