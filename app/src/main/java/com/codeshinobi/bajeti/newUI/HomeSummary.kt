@@ -46,13 +46,12 @@ fun HomeSummary(viewModel: BudgetViewModel) {
 @Composable
 fun SummaryBudgetCard(budgetVM: BudgetViewModel) {
     val budgetViewModel: BudgetViewModel =  budgetVM
-    val expenseViewModel: ExpenseViewModel = viewModel()
-//    val allExpenses by expenseViewModel.allExpenses.observeAsState(emptyList())
-    val allExpenses by expenseViewModel.allExpenses.observeAsState(emptyList())
 
-    val currentMonthExpenses by expenseViewModel.currentMonthExpenses.observeAsState(emptyList())
+    val allExpenses by budgetViewModel.allExpenses.observeAsState(emptyList())
+
+    val currentMonthExpenses by budgetViewModel.currentMonthExpenses.observeAsState(emptyList())
     val budget by budgetViewModel.allBudgets.observeAsState(initial = emptyList())
-    val expenses by expenseViewModel.allExpenses.observeAsState(initial = emptyList())
+    val expenses by budgetViewModel.allExpenses.observeAsState(initial = emptyList())
 
     val totalBudget = budget.sumOf { it.amount }
     val totalExpenses = expenses.sumOf { it.amount }
