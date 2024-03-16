@@ -1,11 +1,13 @@
 package com.codeshinobi.bajeti.newUI
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,6 +16,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -24,6 +28,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -296,7 +301,69 @@ fun MonthlyBudgetsTab(viewModel: BudgetViewModel) {
 }
 @Composable
 fun AddSpendBudgetForm(){
+    var amount by remember { mutableStateOf("") }
+    var category by remember { mutableStateOf("") }
+    var month_name by remember { mutableStateOf("") }
+    var month_number by remember { mutableStateOf("") }
+    var year by remember { mutableStateOf("") }
+    val yearSDF = SimpleDateFormat("yyyy", Locale.getDefault())
+    year = yearSDF.format(Calendar.getInstance().time)
 
+    val months = listOf(
+        "January", "February", "March", "April",
+        "May", "June", "July", "August",
+        "September", "October", "November", "December"
+    )
+    var expanded by remember { mutableStateOf(false) }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(600.dp)
+            .padding(16.dp)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ){
+            OutlinedTextField(
+                value = amount,
+                onValueChange = { amount = it },
+                label = { Text("Amount") },
+                modifier = Modifier.padding()
+            )
+            OutlinedTextField(
+                value = category ,
+                onValueChange ={category = it},
+                label = { Text("Category") },
+                modifier = Modifier.padding()
+            )
+            Box(modifier = Modifier.fillMaxWidth()){
+                TextButton(
+                    onClick = { expanded = true },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Select Month: $month_name")
+                }
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier.fillMaxWidth(),
+                    content = {
+                        months.forEachIndexed() { index, month ->
+                            DropdownMenuItem(
+                                onClick = {
+                                    month_name = month
+                                    month_number = (index + 1).toString()
+                                    expanded = false
+                                },
+                                text = { Text(month) }
+                            )
+                        }
+                    }
+                )
+            }
+        }
+    }
 }
 
 @Preview
