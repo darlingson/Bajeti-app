@@ -346,7 +346,8 @@ fun ExpenseListItem(expense: Expense) {
             Text(text = "Amount: ${expense.amount}", style = MaterialTheme.typography.bodyLarge)
             Text(text = "Category: ${expense.category}", style = MaterialTheme.typography.bodyLarge)
             Text(
-                text = "Date: ${SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(expense.date)}",
+//                text = "Date: ${SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(expense.date)}",
+                text = "Date: ${expense.date}",
                 style = MaterialTheme.typography.bodyLarge
             )
         }

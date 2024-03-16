@@ -71,7 +71,7 @@ class MainActivity : ComponentActivity() {
                 title = "Expenses",
                 selectedIcon = Icons.Filled.ShoppingCart,
                 unselectedIcon = Icons.Outlined.ShoppingCart,
-                badgeAmount = 7
+//                badgeAmount = 7
             )
             val budgetsTab = TabBarItem(
                 title = "Budgets",
