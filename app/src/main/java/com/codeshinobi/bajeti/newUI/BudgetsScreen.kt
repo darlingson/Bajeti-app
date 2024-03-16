@@ -1,5 +1,6 @@
 package com.codeshinobi.bajeti.newUI
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,9 +16,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonElevation
 import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -38,6 +41,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.codeshinobi.bajeti.newUI.ViewModels.BudgetViewModel
@@ -189,7 +193,8 @@ fun CurrentSpendBudgetTab(viewModel: BudgetViewModel) {
                         ){
                             Text("Add expense")
                         }
-                        AddExpenseForm(viewModel)
+//                        AddExpenseForm(viewModel)
+                        AddSpendBudgetForm()
                         Button(onClick = {
                             scope.launch { sheetState.hide() }.invokeOnCompletion {
                                 if (!sheetState.isVisible) {
@@ -301,19 +306,20 @@ fun MonthlyBudgetsTab(viewModel: BudgetViewModel) {
 }
 @Composable
 fun AddSpendBudgetForm(){
-    var amount by remember { mutableStateOf("") }
-    var category by remember { mutableStateOf("") }
-    var month_name by remember { mutableStateOf("") }
-    var month_number by remember { mutableStateOf("") }
-    var year by remember { mutableStateOf("") }
-    val yearSDF = SimpleDateFormat("yyyy", Locale.getDefault())
-    year = yearSDF.format(Calendar.getInstance().time)
-
     val months = listOf(
         "January", "February", "March", "April",
         "May", "June", "July", "August",
         "September", "October", "November", "December"
     )
+    var amount by remember { mutableStateOf("") }
+    var category by remember { mutableStateOf("") }
+    var month_name by remember { mutableStateOf(months[0]) }
+    var month_number by remember { mutableStateOf(1) }
+    var year by remember { mutableStateOf("") }
+    val yearSDF = SimpleDateFormat("yyyy", Locale.getDefault())
+    year = yearSDF.format(Calendar.getInstance().time)
+
+
     var expanded by remember { mutableStateOf(false) }
 
     Card(
@@ -323,7 +329,8 @@ fun AddSpendBudgetForm(){
             .padding(16.dp)
     ) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ){
             OutlinedTextField(
                 value = amount,
@@ -337,12 +344,13 @@ fun AddSpendBudgetForm(){
                 label = { Text("Category") },
                 modifier = Modifier.padding()
             )
-            Box(modifier = Modifier.fillMaxWidth()){
+            Box(modifier = Modifier.padding()){
                 TextButton(
                     onClick = { expanded = true },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.padding(),
+                    border = BorderStroke(1.dp, Color.Black)
                 ) {
-                    Text("Select Month: $month_name")
+                    Text("Month: $month_name", color = Color.Black)
                 }
                 DropdownMenu(
                     expanded = expanded,
@@ -353,7 +361,7 @@ fun AddSpendBudgetForm(){
                             DropdownMenuItem(
                                 onClick = {
                                     month_name = month
-                                    month_number = (index + 1).toString()
+                                    month_number = (index + 1)
                                     expanded = false
                                 },
                                 text = { Text(month) }
@@ -361,6 +369,16 @@ fun AddSpendBudgetForm(){
                         }
                     }
                 )
+            }
+            OutlinedTextField(
+                value = year,
+                onValueChange = { year = it },
+                label = { Text("Year") },
+                modifier = Modifier.padding()
+            )
+            ElevatedButton(
+                onClick = { /*TODO*/ }) {
+                Text("Save")
             }
         }
     }
