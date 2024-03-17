@@ -42,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.codeshinobi.bajeti.newUI.Entities.SpendBudget
 import com.codeshinobi.bajeti.newUI.ViewModels.BudgetViewModel
@@ -367,13 +368,15 @@ fun AddSpendBudgetForm(viewModel: BudgetViewModel) {
             )
             ElevatedButton(
                 onClick = {
-                    viewModel.insert(SpendBudget(
+                    viewModel.insert(
+                        SpendBudget(
                         amount = amount.toDouble(),
                         spendCategory = category,
                         monthName = month_name,
                         monthNumber = month_number,
                         year = year.toInt()
-                    ))
+                    )
+                    )
                     amount = ""
                     category = ""
                     month_name = months[0]
@@ -385,12 +388,98 @@ fun AddSpendBudgetForm(viewModel: BudgetViewModel) {
         }
     }
 }
+@Composable
+fun AddBudgetForm(/*viewModel: BudgetViewModel*/) {
+    val months = listOf(
+        "January", "February", "March", "April",
+        "May", "June", "July", "August",
+        "September", "October", "November", "December"
+    )
+    var amount by remember { mutableStateOf("") }
+    var category by remember { mutableStateOf("") }
+    var month_name by remember { mutableStateOf(months[0]) }
+    var month_number by remember { mutableStateOf(1) }
+    var year by remember { mutableStateOf("") }
+    val yearSDF = SimpleDateFormat("yyyy", Locale.getDefault())
+    year = yearSDF.format(Calendar.getInstance().time)
 
-//@Preview
-//@Composable
-//fun AddSpendBudgetPreview() {
-//    AddSpendBudgetForm()
-//}
+
+    var expanded by remember { mutableStateOf(false) }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(600.dp)
+            .padding(16.dp)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            OutlinedTextField(
+                value = amount,
+                onValueChange = { amount = it },
+                label = { Text("Amount") },
+                modifier = Modifier.padding()
+            )
+            Box(modifier = Modifier.padding()){
+                TextButton(
+                    onClick = { expanded = true },
+                    modifier = Modifier.padding(),
+                    border = BorderStroke(1.dp, Color.Black)
+                ) {
+                    Text("Month: $month_name", color = Color.Black)
+                }
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier.fillMaxWidth(),
+                    content = {
+                        months.forEachIndexed() { index, month ->
+                            DropdownMenuItem(
+                                onClick = {
+                                    month_name = month
+                                    month_number = (index + 1)
+                                    expanded = false
+                                },
+                                text = { Text(month) }
+                            )
+                        }
+                    }
+                )
+            }
+            OutlinedTextField(
+                value = year,
+                onValueChange = { year = it },
+                label = { Text("Year") },
+                modifier = Modifier.padding()
+            )
+            ElevatedButton(
+                onClick = {
+//                    viewModel.insert(
+//                        Budget(
+//                            amount = amount.toDouble(),
+//                            monthName = month_name,
+//                            monthNumber = month_number,
+//                            year = year.toInt()
+//                        )
+//                    )
+                    amount = ""
+                    category = ""
+                    month_name = months[0]
+                    month_number = 1
+                }
+            ) {
+                Text("Save")
+            }
+        }
+    }
+}
+@Preview
+@Composable
+fun AddSpendBudgetPreview() {
+    AddBudgetForm()
+}
 @Composable
 fun BudgetListItem(budget: SpendBudget) {
     Card(
