@@ -374,6 +374,10 @@ fun AddSpendBudgetForm(viewModel: BudgetViewModel) {
                         monthNumber = month_number,
                         year = year.toInt()
                     ))
+                    amount = ""
+                    category = ""
+                    month_name = months[0]
+                    month_number = 1
                 }
             ) {
                 Text("Save")
