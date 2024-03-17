@@ -256,14 +256,21 @@ fun getSampleSpendBudgets(): List<PlaceHolderSpendBudget> {
 @Composable
 fun MonthlyBudgetsTab(viewModel: BudgetViewModel) {
     var searchText by remember { mutableStateOf("") }
-
-//    val budgets = getSampleBudgets()
     var budgets = viewModel.allSpendBudgets.observeAsState(emptyList())
-
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { /*TODO*/ },
+                modifier = Modifier
+                    .padding(top = 16.dp),
+                content = { Icon(imageVector = Icons.Default.Add, contentDescription = "Add") }
+            )
+        }
+    ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(it)
     ) {
         // Search Bar
         OutlinedTextField(
@@ -277,7 +284,7 @@ fun MonthlyBudgetsTab(viewModel: BudgetViewModel) {
         )
 
         // List of Budgets
-        LazyColumn {
+        LazyColumn(modifier = Modifier.padding(it)) {
             val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
             val currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
@@ -292,6 +299,7 @@ fun MonthlyBudgetsTab(viewModel: BudgetViewModel) {
                 }
             }
         }
+    }
     }
 }
 @Composable
