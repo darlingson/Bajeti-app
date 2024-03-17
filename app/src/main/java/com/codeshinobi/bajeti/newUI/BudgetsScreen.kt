@@ -259,6 +259,7 @@ fun MonthlyBudgetsTab(viewModel: BudgetViewModel) {
     var searchText by remember { mutableStateOf("") }
     var budgets = viewModel.allSpendBudgets.observeAsState(emptyList())
     var monthlyBudgets = viewModel.currentMonthSpendBudgets.observeAsState(emptyList())
+    var allBudgets = viewModel.allBudgets.observeAsState(emptyList())
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
@@ -293,13 +294,13 @@ fun MonthlyBudgetsTab(viewModel: BudgetViewModel) {
             val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
             val currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
-            items(budgets.value.filter {
-                it.monthName.contains(
+            items(allBudgets.value.filter {
+                it.month_name.contains(
                     searchText,
                     ignoreCase = true
                 )
             }) { budget ->
-                if (budget.monthNumber != currentMonth || budget.year != currentYear) {
+                if (budget.month_number != currentMonth || budget.year != currentYear) {
                     BudgetListItem(budget = budget)
                 }
             }
@@ -528,7 +529,7 @@ fun AddBudgetForm(viewModel: BudgetViewModel) {
 //    AddBudgetForm()
 //}
 @Composable
-fun BudgetListItem(budget: SpendBudget) {
+fun BudgetListItem(budget: Budget) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -538,7 +539,7 @@ fun BudgetListItem(budget: SpendBudget) {
             modifier = Modifier
                 .padding(16.dp)
         ) {
-            Text(text = budget.monthName, style = MaterialTheme.typography.bodySmall)
+            Text(text = budget.month_name, style = MaterialTheme.typography.bodySmall)
             Text(text = "Amount: ${budget.amount}", style = MaterialTheme.typography.bodyMedium)
             Text(text = "Year: ${budget.year}", style = MaterialTheme.typography.bodyMedium)
         }
