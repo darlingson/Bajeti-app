@@ -6,23 +6,31 @@ import android.widget.DatePicker
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
@@ -30,6 +38,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -42,6 +51,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -309,6 +319,30 @@ fun ExpenseListScreen(viewModel: BudgetViewModel,currentmonth:Boolean) {
     val expenses by viewModel.allExpenses.observeAsState(emptyList())
     val currentMonthNumber = Calendar.getInstance().get(Calendar.MONTH) + 1
 
+    val showDialogToDelete = remember { mutableStateOf(false) }
+    val showDialogToEdit = remember { mutableStateOf(false) }
+    var expenseToDelete by remember { mutableStateOf<Expense?>(null) }
+    var expenseToEdit by remember { mutableStateOf<Expense?>(null) }
+
+
+
+    // Delete Expense Dialog
+    if (showDialogToDelete.value) {
+        DeleteExpenseDialog(
+            expense = expenseToDelete!!,
+            onDeleteClicked = { viewModel.delete(it) },
+            onDismiss = { showDialogToDelete.value = false }
+        )
+    }
+
+    // Edit Expense Dialog
+    if (showDialogToEdit.value) {
+        EditExpenseDialog(
+            expense = expenseToEdit!!,
+            onEditClicked = { viewModel.update(expenseToEdit!!) },
+            onDismiss = { showDialogToEdit.value = false }
+        )
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -337,35 +371,196 @@ fun ExpenseListScreen(viewModel: BudgetViewModel,currentmonth:Boolean) {
                         }
                     }
             ) { expense ->
-                ExpenseListItem(expense = expense)
+                ExpenseListItem(
+                    expense = expense,
+                    onDeleteClicked = {
+                        expenseToDelete = expense
+                        showDialogToDelete.value = true
+                    },
+                    onEditClicked = {
+                        expenseToEdit = expense
+                        showDialogToEdit.value = true
+                    }
+                )
             }
         }
     }
 }
 
 @Composable
-fun ExpenseListItem(expense: Expense) {
+fun ExpenseListItem(
+    expense: Expense,
+    onDeleteClicked: () -> Unit,
+    onEditClicked: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
     ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = expense.name, style = MaterialTheme.typography.bodySmall)
-            Text(text = "Amount: ${expense.amount}", style = MaterialTheme.typography.bodyLarge)
-            Text(text = "Category: ${expense.category}", style = MaterialTheme.typography.bodyLarge)
-            Text(text = "Month number :${expense.monthNumber}")
-            Text(text = "Month name :${expense.month}")
-            Text(
-//                text = "Date: ${SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(expense.date)}",
-                text = "Date: ${expense.date}",
-                style = MaterialTheme.typography.bodyLarge
-            )
+            Column(
+                modifier = Modifier
+                    .weight(0.9f)
+                    .padding(16.dp)
+            ) {
+                Text(text = expense.name, style = MaterialTheme.typography.bodySmall)
+                Text(text = "Amount: ${expense.amount}", style = MaterialTheme.typography.bodyLarge)
+                Text(text = "Category: ${expense.category}", style = MaterialTheme.typography.bodyLarge)
+                Text(text = "Date: ${expense.date}", style = MaterialTheme.typography.bodyLarge)
+            }
+            Column(
+                modifier = Modifier
+                    .weight(0.1f)
+                    .padding(16.dp)
+            ) {
+                IconButton(
+                    onClick = { onEditClicked() },
+                    modifier = Modifier.requiredSize(40.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Edit",
+                        tint = Color.Gray,
+                        modifier = Modifier.fillMaxHeight()
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                IconButton(
+                    onClick = { onDeleteClicked() },
+                    modifier = Modifier.requiredSize(40.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete",
+                        tint = Color.Gray,
+                        modifier = Modifier.fillMaxHeight()
+                    )
+                }
+            }
         }
     }
+}
+@Composable
+fun EditExpenseDialog(
+    expense: Expense,
+    onDismiss: () -> Unit,
+    onEditClicked: (Expense) -> Unit
+) {
+    var editedExpenseName by remember { mutableStateOf(expense.name) }
+    var editedExpenseAmount by remember { mutableStateOf(expense.amount) }
+    var editedExpenseCategory by remember { mutableStateOf(expense.category) }
+    var editedExpenseDate by remember { mutableStateOf(expense.date) }
+    var editedQuantity by remember { mutableStateOf(expense.quantity) }
+    var editedDescription by remember { mutableStateOf(expense.description) }
+    var editedMonthNumber by remember { mutableStateOf(expense.monthNumber) }
+    var editedWeekNumber by remember { mutableStateOf(expense.weekNumber) }
+    var editedYear by remember { mutableStateOf(expense.year) }
+    var editedMonth by remember { mutableStateOf(expense.month) }
+
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        title = { Text("Edit Expense") },
+        confirmButton = {
+            Button(
+                onClick = {
+                    val editedExpense = Expense(
+                        name = editedExpenseName,
+                        amount = editedExpenseAmount,
+                        category = editedExpenseCategory,
+                        date = editedExpenseDate,
+                        quantity = editedQuantity,
+                        description = editedDescription,
+                        monthNumber = editedMonthNumber,
+                        weekNumber = editedWeekNumber,
+                        year = editedYear,
+                        month = editedMonth
+                    )
+                    onEditClicked(editedExpense)
+                    onDismiss()
+                }
+            ) {
+                Text("Save")
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = { onDismiss() }
+            ) {
+                Text("Cancel")
+            }
+        },
+        text = {
+            Column(
+                modifier = Modifier.padding(horizontal = 20.dp)
+            ) {
+                TextField(
+                    value = editedExpenseName,
+                    onValueChange = { editedExpenseName = it },
+                    label = { Text("Name") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                TextField(
+                    value = editedExpenseAmount.toString(),
+                    onValueChange = {},
+                    label = { Text("Amount") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                TextField(
+                    value = editedExpenseCategory,
+                    onValueChange = { editedExpenseCategory = it },
+                    label = { Text("Category") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                TextField(
+                    value = editedExpenseDate,
+                    onValueChange = { editedExpenseDate = it },
+                    label = { Text("Date") },
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = { onDismiss() })
+                )
+            }
+        }
+    )
+}
+
+@Composable
+fun DeleteExpenseDialog(
+    expense: Expense,
+    onDismiss: () -> Unit,
+    onDeleteClicked: (Expense) -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        title = { Text("Confirm Deletion") },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onDeleteClicked(expense)
+                    onDismiss()
+                }
+            ) {
+                Text("Confirm")
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = { onDismiss() }
+            ) {
+                Text("Cancel")
+            }
+        },
+        text = {
+            Text("Are you sure you want to delete this expense?")
+        }
+    )
 }
 
 // Helper function to generate sample expenses
