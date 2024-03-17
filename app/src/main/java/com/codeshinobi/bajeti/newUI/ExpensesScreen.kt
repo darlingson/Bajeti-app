@@ -135,12 +135,14 @@ fun ExpensesScreenTabScreen(viewModel: BudgetViewModel) {
 fun CurrentMonthExpensesTab(viewModel: BudgetViewModel) {
     Column {
         Text("Current Month Expenses")
-        ExpenseListScreen(viewModel)
+        ExpenseListScreen(viewModel, true)
     }
 }
 @Composable
 fun AllExpensesTab(viewModel: BudgetViewModel) {
-    Text("All Expenses")
+    Column {
+        ExpenseListScreen(viewModel, false)
+    }
 }
 @Composable
 fun SearchExpenses(viewModel: BudgetViewModel) {
@@ -148,14 +150,13 @@ fun SearchExpenses(viewModel: BudgetViewModel) {
 }
 @Composable
 fun AddExpenseForm(viewModel: BudgetViewModel) {
-    //getting today's date incase the expense was incurred today
     val sdf = SimpleDateFormat("dd-MM-yyyy")
     val todayDate = sdf.format(Date())
 
     var expenseDate by remember { mutableStateOf(todayDate) }
     var expenseName by remember { mutableStateOf("") }
     var expenseDescription by remember { mutableStateOf("") }
-    var expenseQuantity by remember { mutableStateOf(1) }
+    var expenseQuantity by remember { mutableStateOf("1") }
     var expenseAmount by remember { mutableStateOf("") }
     var expenseCategory by remember { mutableStateOf("") }
 
@@ -170,10 +171,10 @@ fun AddExpenseForm(viewModel: BudgetViewModel) {
     mMonth = mCalendar.get(Calendar.MONTH)
     mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
 
-    var monthName = SimpleDateFormat("MMMM", Locale.getDefault()).format(mCalendar.time)
-    var monthNumber = mMonth + 1
-    var weekNumber = mCalendar.get(Calendar.WEEK_OF_YEAR)
-    var year = mYear
+    var monthName by remember { mutableStateOf(SimpleDateFormat("MMMM", Locale.getDefault()).format(Date())) }
+    var monthNumber by remember { mutableStateOf(mMonth) }
+    var weekNumber by remember { mutableStateOf(0) }
+    var year by remember { mutableStateOf(0) }
 
     val mDate = remember { mutableStateOf(expenseDate) }
 
@@ -184,6 +185,8 @@ fun AddExpenseForm(viewModel: BudgetViewModel) {
                 set(Calendar.YEAR, mYear)
                 set(Calendar.MONTH, mMonth)
                 set(Calendar.DAY_OF_MONTH, mDayOfMonth)
+
+                monthNumber = mMonth
             }
 
             monthName = SimpleDateFormat("MMMM", Locale.getDefault()).format(calendar.time)
@@ -250,7 +253,7 @@ fun AddExpenseForm(viewModel: BudgetViewModel) {
             )
             OutlinedTextField(
                 value = expenseQuantity.toString(),
-                onValueChange = { expenseQuantity = it.toInt() },
+                onValueChange = { expenseQuantity = it },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 label = { Text("Expense Quantity") },
                 modifier = Modifier
@@ -300,17 +303,16 @@ fun AddExpenseForm(viewModel: BudgetViewModel) {
     }
 }
 @Composable
-fun ExpenseListScreen(viewModel: BudgetViewModel) {
+fun ExpenseListScreen(viewModel: BudgetViewModel,currentmonth:Boolean) {
     var searchText by remember { mutableStateOf("") }
-
-//    val expenses = getSampleExpenses()
     val expenses by viewModel.allExpenses.observeAsState(emptyList())
+    val currentMonthNumber = Calendar.getInstance().get(Calendar.MONTH) + 1
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Search Bar
         OutlinedTextField(
             value = searchText,
             onValueChange = { searchText = it },
@@ -320,10 +322,20 @@ fun ExpenseListScreen(viewModel: BudgetViewModel) {
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
         )
-
-        // List of Expenses
         LazyColumn {
-            items(expenses.filter { it.name.contains(searchText, ignoreCase = true) }) { expense ->
+            items(
+                expenses
+                    .filter { it.name.contains(searchText, ignoreCase = true) }
+                    .filter { expense ->
+                        if (currentmonth) {
+                            Log.d("condition","month number : ${currentMonthNumber}, expense month number: ${expense.monthNumber}")
+                            expense.monthNumber == currentMonthNumber
+                        } else {
+                            Log.d("condition","month number : ${currentMonthNumber}, expense month number: ${expense.monthNumber}")
+                            true
+                        }
+                    }
+            ) { expense ->
                 ExpenseListItem(expense = expense)
             }
         }
@@ -344,6 +356,8 @@ fun ExpenseListItem(expense: Expense) {
             Text(text = expense.name, style = MaterialTheme.typography.bodySmall)
             Text(text = "Amount: ${expense.amount}", style = MaterialTheme.typography.bodyLarge)
             Text(text = "Category: ${expense.category}", style = MaterialTheme.typography.bodyLarge)
+            Text(text = "Month number :${expense.monthNumber}")
+            Text(text = "Month name :${expense.month}")
             Text(
 //                text = "Date: ${SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(expense.date)}",
                 text = "Date: ${expense.date}",
