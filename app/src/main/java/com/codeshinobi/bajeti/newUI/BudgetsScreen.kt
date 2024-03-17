@@ -85,7 +85,7 @@ fun BudgetsScreenTabScreen(viewModel: BudgetViewModel) {
 fun PreviousSpendBudgetsTab(viewModel: BudgetViewModel) {
     var searchText by remember { mutableStateOf("") }
 
-    val spendBudgets = getSampleSpendBudgets()
+    val spendBudgets = viewModel.allSpendBudgets.observeAsState(emptyList())
 
     Column(
         modifier = Modifier
@@ -107,8 +107,8 @@ fun PreviousSpendBudgetsTab(viewModel: BudgetViewModel) {
         LazyColumn {
             val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
             val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-            items(spendBudgets.filter {
-                it.category.contains(
+            items(spendBudgets.value.filter {
+                it.spendCategory.contains(
                     searchText,
                     ignoreCase = true
                 )
@@ -126,8 +126,10 @@ fun CurrentSpendBudgetTab(viewModel: BudgetViewModel) {
     var isModalOpen by remember { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
-    val spendBudgets = getSampleSpendBudgets()
     val scope = rememberCoroutineScope()
+
+    val spendBudgets = getSampleSpendBudgets()
+    var allSpendBudgets = viewModel.allSpendBudgets.observeAsState(listOf()).value
 
     Scaffold(
         floatingActionButton = {
@@ -165,8 +167,8 @@ fun CurrentSpendBudgetTab(viewModel: BudgetViewModel) {
             LazyColumn {
                 val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
                 val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-                items(spendBudgets.filter {
-                    it.monthNumber == currentMonth && it.year == currentYear && it.category.contains(
+                items(allSpendBudgets.filter {
+                    it.monthNumber == (currentMonth + 1) && it.year == currentYear && it.spendCategory.contains(
                         searchText,
                         ignoreCase = true
                     )
@@ -213,7 +215,7 @@ fun CurrentSpendBudgetTab(viewModel: BudgetViewModel) {
 }
 
 @Composable
-fun SpendBudgetListItem(spendBudget: PlaceHolderSpendBudget) {
+fun SpendBudgetListItem(spendBudget: SpendBudget) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -224,7 +226,7 @@ fun SpendBudgetListItem(spendBudget: PlaceHolderSpendBudget) {
                 .padding(16.dp)
         ) {
             Text(
-                text = "Category: ${spendBudget.category}",
+                text = "Category: ${spendBudget.spendCategory}",
                 style = MaterialTheme.typography.bodyLarge
             )
             Text(
