@@ -44,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.codeshinobi.bajeti.newUI.Entities.Budget
 import com.codeshinobi.bajeti.newUI.Entities.SpendBudget
 import com.codeshinobi.bajeti.newUI.ViewModels.BudgetViewModel
 import kotlinx.coroutines.launch
@@ -194,7 +195,6 @@ fun CurrentSpendBudgetTab(viewModel: BudgetViewModel) {
                         ){
                             Text("Add expense")
                         }
-//                        AddExpenseForm(viewModel)
                         AddSpendBudgetForm(viewModel)
                         Button(onClick = {
                             scope.launch { sheetState.hide() }.invokeOnCompletion {
@@ -253,14 +253,19 @@ fun getSampleSpendBudgets(): List<PlaceHolderSpendBudget> {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MonthlyBudgetsTab(viewModel: BudgetViewModel) {
     var searchText by remember { mutableStateOf("") }
     var budgets = viewModel.allSpendBudgets.observeAsState(emptyList())
+    var monthlyBudgets = viewModel.currentMonthSpendBudgets.observeAsState(emptyList())
+    var showBottomSheet by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /*TODO*/ },
+                onClick = { showBottomSheet = true},
                 modifier = Modifier
                     .padding(top = 16.dp),
                 content = { Icon(imageVector = Icons.Default.Add, contentDescription = "Add") }
@@ -300,6 +305,40 @@ fun MonthlyBudgetsTab(viewModel: BudgetViewModel) {
             }
         }
     }
+        if (showBottomSheet) {
+            ModalBottomSheet(
+                onDismissRequest = {
+                    showBottomSheet = false
+                },
+                sheetState = sheetState
+            ) {
+                // Sheet content
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth()
+                        .padding(it)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ){
+                        Text("Add Monthly Budget")
+                    }
+                    AddBudgetForm(viewModel)
+                    Button(onClick = {
+                        scope.launch { sheetState.hide() }.invokeOnCompletion {
+                            if (!sheetState.isVisible) {
+                                showBottomSheet = false
+                            }
+                        }
+                    }) {
+                        Text("Close")
+                    }
+                }
+            }
+        }
     }
 }
 @Composable
@@ -397,7 +436,7 @@ fun AddSpendBudgetForm(viewModel: BudgetViewModel) {
     }
 }
 @Composable
-fun AddBudgetForm(/*viewModel: BudgetViewModel*/) {
+fun AddBudgetForm(viewModel: BudgetViewModel) {
     val months = listOf(
         "January", "February", "March", "April",
         "May", "June", "July", "August",
@@ -464,14 +503,14 @@ fun AddBudgetForm(/*viewModel: BudgetViewModel*/) {
             )
             ElevatedButton(
                 onClick = {
-//                    viewModel.insert(
-//                        Budget(
-//                            amount = amount.toDouble(),
-//                            monthName = month_name,
-//                            monthNumber = month_number,
-//                            year = year.toInt()
-//                        )
-//                    )
+                    viewModel.insert(
+                        Budget(
+                            amount = amount.toDouble(),
+                            month_name = month_name,
+                            month_number =  month_number,
+                            year = year.toInt()
+                        )
+                    )
                     amount = ""
                     category = ""
                     month_name = months[0]
@@ -483,11 +522,11 @@ fun AddBudgetForm(/*viewModel: BudgetViewModel*/) {
         }
     }
 }
-@Preview
-@Composable
-fun AddSpendBudgetPreview() {
-    AddBudgetForm()
-}
+//@Preview
+//@Composable
+//fun AddSpendBudgetPreview() {
+//    AddBudgetForm()
+//}
 @Composable
 fun BudgetListItem(budget: SpendBudget) {
     Card(
