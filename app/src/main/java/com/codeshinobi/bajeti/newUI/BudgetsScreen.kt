@@ -35,6 +35,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -44,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.codeshinobi.bajeti.newUI.Entities.SpendBudget
 import com.codeshinobi.bajeti.newUI.ViewModels.BudgetViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -256,7 +258,8 @@ fun getSampleSpendBudgets(): List<PlaceHolderSpendBudget> {
 fun MonthlyBudgetsTab(viewModel: BudgetViewModel) {
     var searchText by remember { mutableStateOf("") }
 
-    val budgets = getSampleBudgets()
+//    val budgets = getSampleBudgets()
+    var budgets = viewModel.allSpendBudgets.observeAsState(emptyList())
 
     Column(
         modifier = Modifier
@@ -278,20 +281,8 @@ fun MonthlyBudgetsTab(viewModel: BudgetViewModel) {
         LazyColumn {
             val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
             val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-            item {
-                BudgetListItem(
-                    PlaceholderBudget(
-                        1000.0,
-                        SimpleDateFormat(
-                            "MMMM",
-                            Locale.getDefault()
-                        ).format(Calendar.getInstance().time),
-                        currentMonth,
-                        currentYear
-                    )
-                )
-            }
-            items(budgets.filter {
+
+            items(budgets.value.filter {
                 it.monthName.contains(
                     searchText,
                     ignoreCase = true
@@ -384,13 +375,13 @@ fun AddSpendBudgetForm(){
     }
 }
 
-@Preview
+//@Preview
+//@Composable
+//fun AddSpendBudgetPreview() {
+//    AddSpendBudgetForm()
+//}
 @Composable
-fun AddSpendBudgetPreview() {
-    AddSpendBudgetForm()
-}
-@Composable
-fun BudgetListItem(budget: PlaceholderBudget) {
+fun BudgetListItem(budget: SpendBudget) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
