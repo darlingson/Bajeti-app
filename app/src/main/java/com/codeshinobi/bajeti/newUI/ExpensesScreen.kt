@@ -114,7 +114,7 @@ fun ExpensesScreen(viewModel: BudgetViewModel) {
 fun ExpensesScreenTabScreen(viewModel: BudgetViewModel) {
     var tabIndex by remember { mutableStateOf(0) }
 
-    val tabs = listOf("Current", "All", "Search")
+    val tabs = listOf("Current", "All",)
 
     Column(modifier = Modifier.fillMaxWidth()) {
         TabRow(selectedTabIndex = tabIndex) {
@@ -128,7 +128,6 @@ fun ExpensesScreenTabScreen(viewModel: BudgetViewModel) {
         when (tabIndex) {
             0 -> CurrentMonthExpensesTab(viewModel)
             1 -> AllExpensesTab(viewModel)
-            2 -> SearchExpenses(viewModel)
         }
     }
 }
