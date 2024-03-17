@@ -16,7 +16,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonElevation
 import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -43,7 +42,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.codeshinobi.bajeti.newUI.Entities.SpendBudget
 import com.codeshinobi.bajeti.newUI.ViewModels.BudgetViewModel
@@ -196,7 +194,7 @@ fun CurrentSpendBudgetTab(viewModel: BudgetViewModel) {
                             Text("Add expense")
                         }
 //                        AddExpenseForm(viewModel)
-                        AddSpendBudgetForm()
+                        AddSpendBudgetForm(viewModel)
                         Button(onClick = {
                             scope.launch { sheetState.hide() }.invokeOnCompletion {
                                 if (!sheetState.isVisible) {
@@ -296,7 +294,7 @@ fun MonthlyBudgetsTab(viewModel: BudgetViewModel) {
     }
 }
 @Composable
-fun AddSpendBudgetForm(){
+fun AddSpendBudgetForm(viewModel: BudgetViewModel) {
     val months = listOf(
         "January", "February", "March", "April",
         "May", "June", "July", "August",
@@ -368,7 +366,16 @@ fun AddSpendBudgetForm(){
                 modifier = Modifier.padding()
             )
             ElevatedButton(
-                onClick = { /*TODO*/ }) {
+                onClick = {
+                    viewModel.insert(SpendBudget(
+                        amount = amount.toDouble(),
+                        spendCategory = category,
+                        monthName = month_name,
+                        monthNumber = month_number,
+                        year = year.toInt()
+                    ))
+                }
+            ) {
                 Text("Save")
             }
         }
