@@ -57,7 +57,7 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpensesScreen(viewModel: BudgetViewModel) {
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
     Scaffold(
@@ -79,9 +79,10 @@ fun ExpensesScreen(viewModel: BudgetViewModel) {
                 onDismissRequest = {
                     showBottomSheet = false
                 },
-                sheetState = sheetState
+                sheetState = sheetState,
+                modifier = Modifier.fillMaxHeight()
             ) {
-                // Sheet content
+
                 Column(
                     modifier = Modifier
                         .fillMaxHeight()

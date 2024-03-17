@@ -125,7 +125,7 @@ fun CurrentSpendBudgetTab(viewModel: BudgetViewModel) {
     var searchText by remember { mutableStateOf("") }
     var isModalOpen by remember { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
 
     val spendBudgets = getSampleSpendBudgets()
@@ -263,7 +263,7 @@ fun MonthlyBudgetsTab(viewModel: BudgetViewModel) {
     var monthlyBudgets = viewModel.currentMonthSpendBudgets.observeAsState(emptyList())
     var allBudgets = viewModel.allBudgets.observeAsState(emptyList())
     var showBottomSheet by remember { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
     Scaffold(
         floatingActionButton = {
