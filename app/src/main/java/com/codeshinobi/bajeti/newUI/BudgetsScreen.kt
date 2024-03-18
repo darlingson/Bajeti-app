@@ -37,6 +37,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -94,6 +95,25 @@ fun PreviousSpendBudgetsTab(viewModel: BudgetViewModel) {
 
     val spendBudgets = viewModel.allSpendBudgets.observeAsState(emptyList())
 
+    val showDialogToDelete = remember { mutableStateOf(false) }
+    val showDialogToEdit = remember { mutableStateOf(false) }
+    var spendBudgetToDelete by remember { mutableStateOf<SpendBudget?>(null) }
+    var spendBudgetToEdit by remember { mutableStateOf<SpendBudget?>(null) }
+
+    if (showDialogToDelete.value) {
+        DeleteSpendBudgetDialog(
+            budget = spendBudgetToDelete!!,
+            onDeleteClicked = { viewModel.delete(it) },
+            onDismiss = { showDialogToDelete.value = false }
+        )
+    }
+    if (showDialogToEdit.value) {
+        EditSpendBudgetDialog(
+            budget = spendBudgetToEdit!!,
+            onEditClicked = { viewModel.update(it) },
+            onDismiss = { showDialogToEdit.value = false },
+        )
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -122,8 +142,14 @@ fun PreviousSpendBudgetsTab(viewModel: BudgetViewModel) {
             }) { spendBudget ->
                 SpendBudgetListItem(
                     spendBudget = spendBudget,
-                    onEditClicked = {/* TODO */ },
-                    onDeleteClicked = {/* TODO */ }
+                    onEditClicked = {
+                        showDialogToEdit.value = true
+                        spendBudgetToEdit = spendBudget
+                    },
+                    onDeleteClicked = {
+                        showDialogToDelete.value = true
+                        spendBudgetToDelete = spendBudget
+                    }
                 )
             }
         }
@@ -342,6 +368,27 @@ fun MonthlyBudgetsTab(viewModel: BudgetViewModel) {
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
+    
+    var showDialogToDelete = remember { mutableStateOf(false) }
+    var showDialogToEdit = remember { mutableStateOf(false) }
+    var budgetToDelete by remember { mutableStateOf<Budget?>(null) }
+    var budgetToEdit by remember { mutableStateOf<Budget?>(null) }
+
+    if (showDialogToDelete.value) {
+        DeleteBudgetDialog(
+            budget = budgetToDelete!!,
+            onDeleteClicked = { viewModel.delete(it) },
+            onDismiss = { showDialogToDelete.value = false }
+        )
+    }
+
+    if (showDialogToEdit.value) {
+        EditBudgetDialog(
+            budget = budgetToEdit!!,
+            onEditClicked = { viewModel.update(it) },
+            onDismiss = { showDialogToEdit.value = false },
+        )
+    }
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -421,6 +468,111 @@ fun MonthlyBudgetsTab(viewModel: BudgetViewModel) {
         }
     }
 }
+
+@Composable
+fun EditBudgetDialog(
+    budget: Budget,
+    onEditClicked: (Budget) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var amount by remember { mutableStateOf(budget.amount) }
+    var monthName by remember { mutableStateOf(budget.month_name) }
+    var monthNumber by remember { mutableStateOf(budget.month_number) }
+    var editedYear by remember {
+        mutableStateOf(budget.year)
+    }
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        title = { Text("Edit Budget") },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onEditClicked(
+                        Budget(
+                            id = budget.id,
+                            amount = amount,
+                            month_name = monthName,
+                            month_number = monthNumber,
+                            year = editedYear
+                        )
+                    )
+                    onDismiss()
+                }
+            ){
+                Text("Save")
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = { onDismiss() }
+            ){
+                Text("Cancel")
+            }
+        },
+        text = {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+            ){
+                TextField(
+                    value = amount.toString(),
+                    onValueChange = { amount = it.toDoubleOrNull() ?: 0.0 },
+                    label = { Text("Amount") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                TextField(
+                    value = monthName,
+                    onValueChange = { monthName = it },
+                    label = { Text("Month Name") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                TextField(
+                    value = monthNumber.toString(),
+                    onValueChange = { monthNumber = it.toIntOrNull() ?: 0 },
+                    label = { Text("Month Number") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                TextField(
+                    value = editedYear.toString(),
+                    onValueChange = { editedYear = it.toIntOrNull() ?: 0 },
+                    label = { Text("Year") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
+    )
+}
+
+@Composable
+fun DeleteBudgetDialog(
+    budget: Budget,
+    onDeleteClicked: (Budget) -> Unit,
+    onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        title = { Text("Confirm Deletion") },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onDeleteClicked(budget)
+                    onDismiss()
+                }
+            ) {
+                Text("Confirm")
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = { onDismiss() }
+            ) {
+                Text("Cancel")
+            }
+        },
+        text = {
+            Text("Are you sure you want to delete this budget?")
+        }
+    )
+}
+
 @Composable
 fun AddSpendBudgetForm(viewModel: BudgetViewModel) {
     val months = listOf(
