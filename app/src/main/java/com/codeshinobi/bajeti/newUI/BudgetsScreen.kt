@@ -153,8 +153,6 @@ fun CurrentSpendBudgetTab(viewModel: BudgetViewModel) {
             onDismiss = { showDialogToDelete.value = false }
         )
     }
-
-    // Edit Expense Dialog
     if (showDialogToEdit.value) {
         EditSpendBudgetDialog(
             budget = spendBudgetToEdit!!,
@@ -659,6 +657,12 @@ fun EditSpendBudgetDialog(
     onDismiss: () -> Unit,
     onEditClicked: (SpendBudget) -> Unit,
     ){
+    var editedAmount by remember { mutableStateOf(budget.amount.toString()) }
+    var editedCategory by remember { mutableStateOf(budget.spendCategory) }
+    var editedMonthName by remember { mutableStateOf(budget.monthName) }
+    var editedMonthNumber by remember { mutableStateOf(budget.monthNumber) }
+    var editedYear by remember { mutableStateOf(budget.year.toString()) }
+
     AlertDialog(
         onDismissRequest = { onDismiss() },
         title = { Text("Confirm Deletion") },
@@ -680,7 +684,42 @@ fun EditSpendBudgetDialog(
             }
         },
         text = {
-            Text("Are you sure you want to edit this budget?")
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            )
+            {
+                OutlinedTextField(
+                    value = editedAmount,
+                    onValueChange = { editedAmount = it },
+                    label = { Text("Amount") },
+                    modifier = Modifier.padding()
+                )
+                OutlinedTextField(
+                    value = editedCategory ,
+                    onValueChange ={editedCategory = it},
+                    label = { Text("Category") },
+                    modifier = Modifier.padding()
+                )
+                OutlinedTextField(
+                    value = editedMonthName,
+                    onValueChange = { editedMonthName = it },
+                    label = { Text("Month") },
+                    modifier = Modifier.padding()
+                )
+                OutlinedTextField(
+                    value = editedMonthNumber.toString(),
+                    onValueChange = { editedMonthNumber = it.toInt() },
+                    label = { Text("Month Number") },
+                    modifier = Modifier.padding()
+                )
+                OutlinedTextField(
+                    value = editedYear,
+                    onValueChange = { editedYear = it },
+                    label = { Text("Year") },
+                    modifier = Modifier.padding()
+                )
+            }
         }
     )
 }
