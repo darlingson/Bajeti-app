@@ -5,15 +5,19 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -23,6 +27,7 @@ import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
@@ -221,33 +226,82 @@ fun CurrentSpendBudgetTab(viewModel: BudgetViewModel) {
         }
     }
 }
-
+@Preview
+@Composable
+fun AddSpendBudgetForm() {
+    SpendBudgetListItem(
+        spendBudget = SpendBudget(
+            spendCategory = "Food",
+            amount = 300.0,
+            monthNumber = 1,
+            year = 2022,
+            monthName = "January"
+        ) ,
+        onDeleteClicked = { /*TODO*/ },
+        onEditClicked = { /*TODO*/ })
+}
 @Composable
 fun SpendBudgetListItem(
     spendBudget: SpendBudget,
     onDeleteClicked: () -> Unit,
     onEditClicked: () -> Unit) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-    ) {
-        Column(
+
+        Card(
             modifier = Modifier
-                .padding(16.dp)
+                .fillMaxWidth()
+                .padding(8.dp),
         ) {
-            Text(
-                text = "Category: ${spendBudget.spendCategory}",
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                text = "Amount: ${spendBudget.amount}",
-                style = MaterialTheme.typography.labelMedium
-            )
-            Text(
-                text = "Month: ${spendBudget.monthName} ${spendBudget.year}",
-                style = MaterialTheme.typography.labelMedium
-            )
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ){
+            Column(
+                modifier = Modifier
+                    .weight(0.9f)
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = "Category: ${spendBudget.spendCategory}",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Text(
+                    text = "Amount: ${spendBudget.amount}",
+                    style = MaterialTheme.typography.labelMedium
+                )
+                Text(
+                    text = "Month: ${spendBudget.monthName} ${spendBudget.year}",
+                    style = MaterialTheme.typography.labelMedium
+                )
+            }
+                Column(
+                    modifier = Modifier
+                        .weight(0.1f)
+                        .padding(16.dp)
+                ) {
+                    IconButton(
+                        onClick = { onEditClicked() },
+                        modifier = Modifier.requiredSize(40.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Edit",
+                            tint = Color.Gray,
+                            modifier = Modifier.fillMaxHeight()
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    IconButton(
+                        onClick = { onDeleteClicked() },
+                        modifier = Modifier.requiredSize(40.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Delete",
+                            tint = Color.Gray,
+                            modifier = Modifier.fillMaxHeight()
+                        )
+                    }
+                }
         }
     }
 }
