@@ -52,7 +52,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.codeshinobi.bajeti.newUI.Entities.Budget
-import com.codeshinobi.bajeti.newUI.Entities.Expense
 import com.codeshinobi.bajeti.newUI.Entities.SpendBudget
 import com.codeshinobi.bajeti.newUI.ViewModels.BudgetViewModel
 import kotlinx.coroutines.launch
@@ -427,7 +426,16 @@ fun MonthlyBudgetsTab(viewModel: BudgetViewModel) {
                 )
             }) { budget ->
                 if (budget.month_number != currentMonth || budget.year != currentYear) {
-                    BudgetListItem(budget = budget)
+                    BudgetListItem(
+                        budget = budget,
+                        onEditClicked = {
+                            showDialogToEdit.value = true
+                            budgetToEdit = budget
+                        }
+                    ) {
+                        showDialogToDelete.value = true
+                        budgetToDelete = budget
+                    }
                 }
             }
         }
@@ -756,19 +764,54 @@ fun AddBudgetForm(viewModel: BudgetViewModel) {
 }
 
 @Composable
-fun BudgetListItem(budget: Budget) {
+fun BudgetListItem(budget: Budget, onEditClicked: () -> Unit, onDeleteClicked: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
     ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = budget.month_name, style = MaterialTheme.typography.bodySmall)
-            Text(text = "Amount: ${budget.amount}", style = MaterialTheme.typography.bodyMedium)
-            Text(text = "Year: ${budget.year}", style = MaterialTheme.typography.bodyMedium)
+            Column(
+                modifier = Modifier
+                    .weight(0.9f)
+                    .padding(16.dp)
+            ) {
+                Text(text = budget.month_name, style = MaterialTheme.typography.bodySmall)
+                Text(text = "Amount: ${budget.amount}", style = MaterialTheme.typography.bodyMedium)
+                Text(text = "Year: ${budget.year}", style = MaterialTheme.typography.bodyMedium)
+            }
+            Column(
+                modifier = Modifier
+                    .weight(0.1f)
+                    .padding(16.dp)
+            ) {
+                IconButton(
+                    onClick = { onEditClicked() },
+                    modifier = Modifier.requiredSize(40.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Edit",
+                        tint = Color.Gray,
+                        modifier = Modifier.fillMaxHeight()
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                IconButton(
+                    onClick = { onDeleteClicked() },
+                    modifier = Modifier.requiredSize(40.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete",
+                        tint = Color.Gray,
+                        modifier = Modifier.fillMaxHeight()
+                    )
+                }
+            }
         }
     }
 }
