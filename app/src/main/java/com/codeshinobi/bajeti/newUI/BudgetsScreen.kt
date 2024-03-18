@@ -113,7 +113,11 @@ fun PreviousSpendBudgetsTab(viewModel: BudgetViewModel) {
                     ignoreCase = true
                 )
             }) { spendBudget ->
-                SpendBudgetListItem(spendBudget = spendBudget)
+                SpendBudgetListItem(
+                    spendBudget = spendBudget,
+                    onEditClicked = {/* TODO */ },
+                    onDeleteClicked = {/* TODO */ }
+                )
             }
         }
     }
@@ -173,7 +177,11 @@ fun CurrentSpendBudgetTab(viewModel: BudgetViewModel) {
                         ignoreCase = true
                     )
                 }) { spendBudget ->
-                    SpendBudgetListItem(spendBudget = spendBudget)
+                    SpendBudgetListItem(
+                        spendBudget = spendBudget,
+                        onEditClicked = {/* TODO */ },
+                        onDeleteClicked = {/* TODO */ }
+                    )
                 }
             }
             if (showBottomSheet) {
@@ -215,7 +223,10 @@ fun CurrentSpendBudgetTab(viewModel: BudgetViewModel) {
 }
 
 @Composable
-fun SpendBudgetListItem(spendBudget: SpendBudget) {
+fun SpendBudgetListItem(
+    spendBudget: SpendBudget,
+    onDeleteClicked: () -> Unit,
+    onEditClicked: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()

@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
@@ -53,11 +52,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.codeshinobi.bajeti.newUI.Entities.Expense
 import com.codeshinobi.bajeti.newUI.ViewModels.BudgetViewModel
-import com.codeshinobi.bajeti.ui.theme.BajetiTheme
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -339,8 +336,8 @@ fun ExpenseListScreen(viewModel: BudgetViewModel,currentmonth:Boolean) {
     if (showDialogToEdit.value) {
         EditExpenseDialog(
             expense = expenseToEdit!!,
-            onEditClicked = { viewModel.update(expenseToEdit!!) },
-            onDismiss = { showDialogToEdit.value = false }
+            onEditClicked = { viewModel.update(it) },
+            onDismiss = { showDialogToEdit.value = false },
         )
     }
     Column(
@@ -448,7 +445,7 @@ fun ExpenseListItem(
 fun EditExpenseDialog(
     expense: Expense,
     onDismiss: () -> Unit,
-    onEditClicked: (Expense) -> Unit
+    onEditClicked: (Expense) -> Unit,
 ) {
     var editedExpenseName by remember { mutableStateOf(expense.name) }
     var editedExpenseAmount by remember { mutableStateOf(expense.amount) }
@@ -506,9 +503,10 @@ fun EditExpenseDialog(
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
                     value = editedExpenseAmount.toString(),
-                    onValueChange = {},
+                    onValueChange = {editedExpenseAmount = it.toDouble()},
                     label = { Text("Amount") },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
