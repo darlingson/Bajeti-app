@@ -821,7 +821,16 @@ fun EditSpendBudgetDialog(
         confirmButton = {
             Button(
                 onClick = {
-                    onEditClicked(budget)
+                    onEditClicked(
+                        SpendBudget(
+                            id = budget.id,
+                            amount = editedAmount.toDouble(),
+                            spendCategory = editedCategory,
+                            monthName = editedMonthName,
+                            monthNumber = editedMonthNumber,
+                            year = editedYear.toInt()
+                        )
+                    )
                     onDismiss()
                 }
             ) {
