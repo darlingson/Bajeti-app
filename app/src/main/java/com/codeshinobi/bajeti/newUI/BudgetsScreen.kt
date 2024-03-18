@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenu
@@ -50,6 +51,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.codeshinobi.bajeti.newUI.Entities.Budget
+import com.codeshinobi.bajeti.newUI.Entities.Expense
 import com.codeshinobi.bajeti.newUI.Entities.SpendBudget
 import com.codeshinobi.bajeti.newUI.ViewModels.BudgetViewModel
 import kotlinx.coroutines.launch
@@ -140,6 +142,27 @@ fun CurrentSpendBudgetTab(viewModel: BudgetViewModel) {
     val spendBudgets = getSampleSpendBudgets()
     var allSpendBudgets = viewModel.allSpendBudgets.observeAsState(listOf()).value
 
+    val showDialogToDelete = remember { mutableStateOf(false) }
+    val showDialogToEdit = remember { mutableStateOf(false) }
+    var spendBudgetToDelete by remember { mutableStateOf<SpendBudget?>(null) }
+    var spendBudgetToEdit by remember { mutableStateOf<SpendBudget?>(null) }
+
+    if (showDialogToDelete.value) {
+        DeleteSpendBudgetDialog(
+            budget = spendBudgetToDelete!!,
+            onDeleteClicked = { viewModel.delete(it) },
+            onDismiss = { showDialogToDelete.value = false }
+        )
+    }
+
+    // Edit Expense Dialog
+    if (showDialogToEdit.value) {
+        EditSpendBudgetDialog(
+            budget = spendBudgetToEdit!!,
+            onEditClicked = { viewModel.update(it) },
+            onDismiss = { showDialogToEdit.value = false },
+        )
+    }
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -184,8 +207,14 @@ fun CurrentSpendBudgetTab(viewModel: BudgetViewModel) {
                 }) { spendBudget ->
                     SpendBudgetListItem(
                         spendBudget = spendBudget,
-                        onEditClicked = {/* TODO */ },
-                        onDeleteClicked = {/* TODO */ }
+                        onEditClicked = {
+                            showDialogToEdit.value = true
+                            spendBudgetToEdit = spendBudget
+                        },
+                        onDeleteClicked = {
+                            showDialogToDelete.value = true
+                            spendBudgetToDelete = spendBudget
+                        }
                     )
                 }
             }
@@ -228,7 +257,7 @@ fun CurrentSpendBudgetTab(viewModel: BudgetViewModel) {
 }
 @Preview
 @Composable
-fun AddSpendBudgetForm() {
+fun SpendBudgetListItemCard() {
     SpendBudgetListItem(
         spendBudget = SpendBudget(
             spendCategory = "Food",
@@ -590,11 +619,7 @@ fun AddBudgetForm(viewModel: BudgetViewModel) {
         }
     }
 }
-//@Preview
-//@Composable
-//fun AddSpendBudgetPreview() {
-//    AddBudgetForm()
-//}
+
 @Composable
 fun BudgetListItem(budget: Budget) {
     Card(
@@ -612,7 +637,68 @@ fun BudgetListItem(budget: Budget) {
         }
     }
 }
-
+@Composable
+fun DeleteSpendBudgetDialog(
+    budget: SpendBudget,
+    onDismiss: () -> Unit,
+    onDeleteClicked: (SpendBudget) -> Unit,
+    ){
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        title = { Text("Confirm Deletion") },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onDeleteClicked(budget)
+                    onDismiss()
+                }
+            ) {
+                Text("Confirm")
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = { onDismiss() }
+            ) {
+                Text("Cancel")
+            }
+        },
+        text = {
+            Text("Are you sure you want to delete this budget?")
+        }
+    )
+}
+@Composable
+fun EditSpendBudgetDialog(
+    budget: SpendBudget,
+    onDismiss: () -> Unit,
+    onEditClicked: (SpendBudget) -> Unit,
+    ){
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        title = { Text("Confirm Deletion") },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onEditClicked(budget)
+                    onDismiss()
+                }
+            ) {
+                Text("Confirm")
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = { onDismiss() }
+            ) {
+                Text("Cancel")
+            }
+        },
+        text = {
+            Text("Are you sure you want to edit this budget?")
+        }
+    )
+}
 fun getSampleBudgets(): List<PlaceholderBudget> {
     return listOf(
         PlaceholderBudget(1000.0, "January", 0, 2023),
