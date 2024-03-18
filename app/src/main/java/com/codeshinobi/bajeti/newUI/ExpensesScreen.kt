@@ -464,19 +464,33 @@ fun EditExpenseDialog(
         confirmButton = {
             Button(
                 onClick = {
-                    val editedExpense = Expense(
-                        name = editedExpenseName,
-                        amount = editedExpenseAmount,
-                        category = editedExpenseCategory,
-                        date = editedExpenseDate,
-                        quantity = editedQuantity,
-                        description = editedDescription,
-                        monthNumber = editedMonthNumber,
-                        weekNumber = editedWeekNumber,
-                        year = editedYear,
-                        month = editedMonth
+//                    val editedExpense = Expense(
+//                        name = editedExpenseName,
+//                        amount = editedExpenseAmount,
+//                        category = editedExpenseCategory,
+//                        date = editedExpenseDate,
+//                        quantity = editedQuantity,
+//                        description = editedDescription,
+//                        monthNumber = editedMonthNumber,
+//                        weekNumber = editedWeekNumber,
+//                        year = editedYear,
+//                        month = editedMonth
+//                    )
+                    onEditClicked(
+                        Expense(
+                            id = expense.id,
+                            name = editedExpenseName,
+                            amount = editedExpenseAmount,
+                            category = editedExpenseCategory,
+                            date = editedExpenseDate,
+                            quantity = editedQuantity,
+                            description = editedDescription,
+                            monthNumber = editedMonthNumber,
+                            weekNumber = editedWeekNumber,
+                            year = editedYear,
+                            month = editedMonth
+                        )
                     )
-                    onEditClicked(editedExpense)
                     onDismiss()
                 }
             ) {
