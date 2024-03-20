@@ -4,6 +4,7 @@ import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -93,7 +94,7 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.secondary
                 ) {
                     val owner = LocalViewModelStoreOwner.current
                     owner?.let {
@@ -109,7 +110,9 @@ class MainActivity : ComponentActivity() {
                             NavHost(
                                 navController = navController,
                                 startDestination = homeTab.title,
-                                modifier = Modifier.padding(it)
+                                modifier = Modifier.padding(it).background(
+                                    color = MaterialTheme.colorScheme.secondary
+                                )
                             ) {
                                 composable(homeTab.title) {
                                     HomeSummary(viewModel)
