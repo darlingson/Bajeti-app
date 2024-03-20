@@ -117,4 +117,6 @@ dependencies {
     implementation "androidx.camera:camera-lifecycle"
     implementation "androidx.camera:camera-view"
     implementation "androidx.camera:camera-extensions"
+
+    implementation "co.yml:ycharts:2.1.0"
 }
