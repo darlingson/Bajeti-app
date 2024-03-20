@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.codeshinobi.bajeti"
-        minSdk 24
+        minSdk 26
         targetSdk 34
         versionCode 1
         versionName "1.0"
@@ -118,5 +118,5 @@ dependencies {
     implementation "androidx.camera:camera-view"
     implementation "androidx.camera:camera-extensions"
 
-    implementation "co.yml:ycharts:2.1.0"
+    implementation "co.yml:ycharts:2.0.0"
 }
