@@ -118,6 +118,7 @@ fun PreviousSpendBudgetsTab(viewModel: BudgetViewModel) {
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
+            .background(color = MaterialTheme.colorScheme.tertiary)
     ) {
         // Search Bar
         OutlinedTextField(
@@ -201,6 +202,7 @@ fun CurrentSpendBudgetTab(viewModel: BudgetViewModel) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
+                .background(color = MaterialTheme.colorScheme.tertiary)
         ) {
             // Search Bar
             OutlinedTextField(
@@ -403,6 +405,7 @@ fun MonthlyBudgetsTab(viewModel: BudgetViewModel) {
         modifier = Modifier
             .fillMaxSize()
             .padding(it)
+            .background(color = MaterialTheme.colorScheme.tertiary)
     ) {
         // Search Bar
         OutlinedTextField(
