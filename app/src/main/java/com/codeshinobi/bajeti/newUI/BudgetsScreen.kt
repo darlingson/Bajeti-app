@@ -1,6 +1,7 @@
 package com.codeshinobi.bajeti.newUI
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -71,7 +72,7 @@ fun BudgetsScreenTabScreen(viewModel: BudgetViewModel) {
 
     val tabs = listOf("Total Budgets", "Current Spend Budget", "Previous Spend Budgets")
 
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = Modifier.fillMaxWidth().background(color = MaterialTheme.colorScheme.tertiary)) {
         TabRow(selectedTabIndex = tabIndex) {
             tabs.forEachIndexed { index, title ->
                 Tab(text = { Text(title) },
