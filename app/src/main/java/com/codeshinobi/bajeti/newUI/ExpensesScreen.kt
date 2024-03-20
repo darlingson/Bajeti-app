@@ -3,6 +3,7 @@ package com.codeshinobi.bajeti.newUI
 import android.app.DatePickerDialog
 import android.util.Log
 import android.widget.DatePicker
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,6 +27,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -68,6 +70,7 @@ fun ExpensesScreen(viewModel: BudgetViewModel) {
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
     Scaffold(
+        contentColor = MaterialTheme.colorScheme.tertiary,
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 text = { Text("Add expense") },
@@ -95,6 +98,7 @@ fun ExpensesScreen(viewModel: BudgetViewModel) {
                         .fillMaxHeight()
                         .fillMaxWidth()
                         .padding(contentPadding)
+                        .background(color = MaterialTheme.colorScheme.tertiary)
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -124,7 +128,10 @@ fun ExpensesScreenTabScreen(viewModel: BudgetViewModel) {
 
     val tabs = listOf("Current", "All",)
 
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+            .background(color = MaterialTheme.colorScheme.tertiary)
+    ) {
         TabRow(selectedTabIndex = tabIndex) {
             tabs.forEachIndexed { index, title ->
                 Tab(text = { Text(title) },
@@ -354,7 +361,10 @@ fun ExpenseListScreen(viewModel: BudgetViewModel,currentmonth:Boolean) {
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
         )
-        LazyColumn {
+        LazyColumn(
+//            modifier = Modifier.background(color = MaterialTheme.colorScheme.primary)
+        )
+        {
             items(
                 expenses
                     .filter { it.name.contains(searchText, ignoreCase = true) }
@@ -394,6 +404,11 @@ fun ExpenseListItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 10.dp
+        ),
+        shape = MaterialTheme.shapes.extraLarge
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
