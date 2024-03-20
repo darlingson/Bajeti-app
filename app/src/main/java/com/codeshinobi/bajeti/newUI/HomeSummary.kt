@@ -1,5 +1,6 @@
 package com.codeshinobi.bajeti.newUI
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,7 +41,7 @@ fun HomeSummary(viewModel: BudgetViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-//            .verticalScroll(rememberScrol lState())
+            .background(color = MaterialTheme.colorScheme.tertiary)
     ) {
         SummaryBudgetCard(viewModel)
         Divider(
@@ -119,7 +120,9 @@ fun MonthlyExpensesSummaryList(viewModel: BudgetViewModel) {
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
         )
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier.background(MaterialTheme.colorScheme.tertiary)
+    ) {
         items(expenses.filter { it.name.contains(searchText, ignoreCase = true) }) { expense ->
             ExpenseCard(
                 name = expense.name,
@@ -145,6 +148,9 @@ fun ExpenseCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 10.dp
         ),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        )
     ) {
         Column(
             modifier = Modifier
