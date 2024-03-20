@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedButton
@@ -304,6 +305,10 @@ fun SpendBudgetListItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = 10.dp
+            )
         ) {
             Row (
                 modifier = Modifier.fillMaxWidth(),
@@ -607,7 +612,7 @@ fun AddSpendBudgetForm(viewModel: BudgetViewModel) {
         modifier = Modifier
             .fillMaxWidth()
             .height(600.dp)
-            .padding(16.dp)
+            .padding(16.dp),
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -773,6 +778,10 @@ fun BudgetListItem(budget: Budget, onEditClicked: () -> Unit, onDeleteClicked: (
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 10.dp
+        )
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
