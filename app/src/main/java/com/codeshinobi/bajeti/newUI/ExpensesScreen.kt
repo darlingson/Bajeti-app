@@ -55,8 +55,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.codeshinobi.bajeti.NoPermissionScreen
 import com.codeshinobi.bajeti.newUI.Entities.Expense
 import com.codeshinobi.bajeti.newUI.ViewModels.BudgetViewModel
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionState
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -152,8 +157,25 @@ fun ExpensesScreen(viewModel: BudgetViewModel) {
         }
     }
 }
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CameraComposable() {
+    val cameraPermissionState:PermissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
+    CameraPermissions(
+        hasPermission = cameraPermissionState.status.isGranted,
+        onRequestPermission = cameraPermissionState::launchPermissionRequest)
+}
+@Composable
+fun CameraPermissions(hasPermission:Boolean,onRequestPermission:()->Unit){
+    if (hasPermission) {
+        CameraScreen()
+    }
+    else{
+        NoPermissionScreen(onRequestPermission)
+    }
+}
+@Composable
+fun CameraScreen() {
 
 }
 @Composable
