@@ -112,11 +112,14 @@ fun ExpensesScreen(viewModel: BudgetViewModel) {
                     }) {
                         Text("Close")
                     }
-                Column(Modifier.fillMaxSize())
+                Column(
+                    Modifier
+                        .fillMaxSize()
+                        .padding(contentPadding))
                 {
                     when (modaltabIndex) {
                         0 -> AddExpenseForm(viewModel)
-                        1 -> Text(text = "Camera", modifier = Modifier.padding(contentPadding))
+                        1 -> CameraComposable()
                     }
                 }
 
@@ -148,6 +151,10 @@ fun ExpensesScreen(viewModel: BudgetViewModel) {
             }
         }
     }
+}
+@Composable
+fun CameraComposable() {
+
 }
 @Composable
 fun ExpensesScreenTabScreen(viewModel: BudgetViewModel) {
