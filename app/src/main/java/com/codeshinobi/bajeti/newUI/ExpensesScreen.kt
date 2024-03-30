@@ -92,22 +92,17 @@ fun ExpensesScreen(viewModel: BudgetViewModel) {
                 sheetState = sheetState,
                 modifier = Modifier.fillMaxHeight()
             ) {
+                var modaltabIndex by remember { mutableStateOf(0) }
+                val modaltabs = listOf("form", "camera",)
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .fillMaxWidth()
-                        .padding(contentPadding)
-                        .background(color = MaterialTheme.colorScheme.tertiary)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ){
-                        Text("Add expense")
+                    TabRow(selectedTabIndex = modaltabIndex) {
+                        modaltabs.forEachIndexed { index, title ->
+                            Tab(text = { Text(title) },
+                                selected = modaltabIndex == index,
+                                onClick = { modaltabIndex = index }
+                            )
+                        }
                     }
-                    AddExpenseForm(viewModel)
                     Button(onClick = {
                         scope.launch { sheetState.hide() }.invokeOnCompletion {
                             if (!sheetState.isVisible) {
@@ -117,7 +112,39 @@ fun ExpensesScreen(viewModel: BudgetViewModel) {
                     }) {
                         Text("Close")
                     }
+                Column(Modifier.fillMaxSize())
+                {
+                    when (modaltabIndex) {
+                        0 -> AddExpenseForm(viewModel)
+                        1 -> Text(text = "Camera", modifier = Modifier.padding(contentPadding))
+                    }
                 }
+
+//                Column(
+//                    modifier = Modifier
+//                        .fillMaxHeight()
+//                        .fillMaxWidth()
+//                        .padding(contentPadding)
+//                        .background(color = MaterialTheme.colorScheme.tertiary)
+//                ) {
+//                    Row(
+//                        modifier = Modifier.fillMaxWidth(),
+//                        verticalAlignment = Alignment.CenterVertically,
+//                        horizontalArrangement = Arrangement.Center
+//                    ){
+//                        Text("Add expense")
+//                    }
+//                    AddExpenseForm(viewModel)
+//                    Button(onClick = {
+//                        scope.launch { sheetState.hide() }.invokeOnCompletion {
+//                            if (!sheetState.isVisible) {
+//                                showBottomSheet = false
+//                            }
+//                        }
+//                    }) {
+//                        Text("Close")
+//                    }
+//                }
             }
         }
     }
@@ -129,7 +156,8 @@ fun ExpensesScreenTabScreen(viewModel: BudgetViewModel) {
     val tabs = listOf("Current", "All",)
 
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .background(color = MaterialTheme.colorScheme.tertiary)
     ) {
         TabRow(selectedTabIndex = tabIndex) {
