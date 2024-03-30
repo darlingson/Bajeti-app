@@ -1,8 +1,11 @@
 package com.codeshinobi.bajeti.newUI
 
 import android.app.DatePickerDialog
+import android.net.Uri
 import android.util.Log
 import android.widget.DatePicker
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -55,6 +58,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+//import com.codeshinobi.bajeti.Manifest
 import com.codeshinobi.bajeti.NoPermissionScreen
 import com.codeshinobi.bajeti.newUI.Entities.Expense
 import com.codeshinobi.bajeti.newUI.ViewModels.BudgetViewModel
@@ -67,6 +73,14 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.Objects
+import android.Manifest
+import android.content.Context
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
+import coil.compose.rememberImagePainter
+import com.codeshinobi.bajeti.R
+import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -176,7 +190,67 @@ fun CameraPermissions(hasPermission:Boolean,onRequestPermission:()->Unit){
 }
 @Composable
 fun CameraScreen() {
+    val context = LocalContext.current
+    val file = context.createImageFile()
+    val uri = FileProvider.getUriForFile(
+        Objects.requireNonNull(context),
+        context.packageName + ".provider",
+        file
+    )
+    var captureImageUri by remember {
+        mutableStateOf<Uri>(Uri.EMPTY)
+    }
+    val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
+    captureImageUri = uri
+    }
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ){
+        if (it){
+            cameraLauncher.launch(uri)
+        }
+        else{
 
+        }
+    }
+    Column {
+        Button(onClick = {
+            val permissionCheckResult =
+                ContextCompat.checkSelfPermission(context,Manifest.permission.CAMERA)
+            if (permissionCheckResult == android.content.pm.PackageManager.PERMISSION_GRANTED){
+                cameraLauncher.launch(uri)
+            }
+            else{
+                permissionLauncher.launch(Manifest.permission.CAMERA)
+            }
+        }){
+            Text("Camera")
+        }
+    }
+
+    if (captureImageUri.path?.isNotEmpty() == true) {
+        Image(
+            modifier = Modifier.padding(16.dp,8.dp),
+            painter = rememberImagePainter(captureImageUri),
+            contentDescription = null)
+    }
+    else{
+        Image(
+            modifier = Modifier.padding(16.dp,8.dp),
+            painter = painterResource(id = R.drawable.baseline_image_24),
+            contentDescription = null)
+    }
+
+}
+fun Context.createImageFile(): File {
+    val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+    val imageFileName = "JPEG_" + timeStamp + "_"
+    val image = File.createTempFile(
+        imageFileName,
+        ".jpg",
+        externalCacheDir
+    )
+    return image
 }
 @Composable
 fun ExpensesScreenTabScreen(viewModel: BudgetViewModel) {
