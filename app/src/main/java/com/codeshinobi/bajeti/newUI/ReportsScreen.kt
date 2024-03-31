@@ -8,9 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import co.yml.charts.axis.AxisData
+import co.yml.charts.common.model.Point
 import co.yml.charts.common.utils.DataUtils
 import co.yml.charts.ui.barchart.BarChart
 import co.yml.charts.ui.barchart.models.BarChartData
+import co.yml.charts.ui.barchart.models.BarData
 import com.codeshinobi.bajeti.newUI.ViewModels.BudgetViewModel
 
 @Composable
@@ -22,16 +24,17 @@ fun ReportsScreen(viewModel: BudgetViewModel) {
 }
 @Composable
 fun BarChartComposable() {
+    var trialBarData = BarData(label = "January", point = Point(x=0f, y=10f))
     val barChartListSize = 10
     val maxRange = 100
     val yStepSize = 10
-    val barChartData = DataUtils.getBarChartData(barChartListSize, maxRange)
+    val barData = DataUtils.getBarChartData(barChartListSize, maxRange)
     val xAxisData = AxisData.Builder()
         .axisStepSize(30.dp)
-        .steps(barChartData.size - 1)
+        .steps(barData.size - 1)
         .bottomPadding(40.dp)
         .axisLabelAngle(20f)
-        .labelData { index -> barChartData[index].label }
+        .labelData { index -> barData[index].label }
         .build()
 
     val yAxisData = AxisData.Builder()
@@ -41,7 +44,7 @@ fun BarChartComposable() {
         .labelData { index -> (index * (maxRange / yStepSize)).toString() }
         .build()
     val barChartDataClass = BarChartData(
-        chartData = barChartData,
+        chartData = barData,
         xAxisData = xAxisData,
         yAxisData = yAxisData,
     )

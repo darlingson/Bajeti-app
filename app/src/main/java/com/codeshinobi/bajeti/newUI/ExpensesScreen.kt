@@ -76,6 +76,7 @@ import java.util.Locale
 import java.util.Objects
 import android.Manifest
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
 import coil.compose.rememberImagePainter
@@ -112,7 +113,8 @@ fun ExpensesScreen(viewModel: BudgetViewModel) {
                 modifier = Modifier.fillMaxHeight()
             ) {
                 var modaltabIndex by remember { mutableStateOf(0) }
-                val modaltabs= listOf("form", "camera",)
+                val modaltabs
+                = listOf("form", "camera",)
 
                     TabRow(selectedTabIndex = modaltabIndex) {
                         modaltabs.forEachIndexed { index, title ->
@@ -296,6 +298,7 @@ fun SearchExpenses(viewModel: BudgetViewModel) {
 }
 @Composable
 fun AddExpenseForm(viewModel: BudgetViewModel) {
+    var context = LocalContext.current
     val sdf = SimpleDateFormat("dd-MM-yyyy")
     val todayDate = sdf.format(Date())
 
@@ -426,6 +429,8 @@ fun AddExpenseForm(viewModel: BudgetViewModel) {
 
             Button(
                 onClick = {
+                    Toast.makeText(context, "${expenseAmount}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "${monthNumber}", Toast.LENGTH_SHORT).show()
                     viewModel.insert(
                         Expense(
                             name = expenseName,
