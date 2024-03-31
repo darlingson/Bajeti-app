@@ -124,7 +124,7 @@ class MainActivity : ComponentActivity() {
                                     BudgetsScreen(viewModel)
                                 }
                                 composable(reportsTab.title) {
-                                    ReportsScreen()
+                                    ReportsScreen(viewModel)
                                 }
                             }
                         }
