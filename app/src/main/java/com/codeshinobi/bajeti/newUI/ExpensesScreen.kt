@@ -112,7 +112,7 @@ fun ExpensesScreen(viewModel: BudgetViewModel) {
                 modifier = Modifier.fillMaxHeight()
             ) {
                 var modaltabIndex by remember { mutableStateOf(0) }
-                val modaltabs = listOf("form", "camera",)
+                val modaltabs= listOf("form", "camera",)
 
                     TabRow(selectedTabIndex = modaltabIndex) {
                         modaltabs.forEachIndexed { index, title ->
